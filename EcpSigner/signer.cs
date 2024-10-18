@@ -44,6 +44,7 @@ namespace EcpSigner
             try
             {
                 Settings s = Settings.Read("config.json");
+                s.CheckSettings(logger);
                 await MainLoop(args, s, token);
             }
             catch (Exception ex)
