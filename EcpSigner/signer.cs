@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using CacheTools;
 using System.Diagnostics;
+using System.IO;
 
 namespace EcpSigner
 {
@@ -32,6 +33,10 @@ namespace EcpSigner
         {
             string ver = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
             logger.Info($"EcpSigner v{ver}");
+
+            // Устанавливаем рабочую папку
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Environment.CurrentDirectory = path;
 
             cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
