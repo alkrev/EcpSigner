@@ -11,7 +11,7 @@ namespace EcpSigner
         public string login { get; set; }
         public string password { get; set; }
         public string url { get; set; }
-        public int threadCount { get; set; }
+        public int pauseMinutes { get; set; }
         public int cacheMinutes { get; set; }
         public List<string> ignoreDocTypes { get; set; }
         public Dictionary<string, byte> ignoreDocTypesDict { get; set; }
@@ -41,10 +41,10 @@ namespace EcpSigner
             {
                 throw new Exception("url сайта ЕЦП не задан");
             }
-            if (threadCount<1)
+            if (pauseMinutes < 1 || pauseMinutes > 7*60*12 )
             {
-                threadCount = 10;
-                logger.Warn($"threadCount задан некорректно. Установлено threadCount={threadCount}");
+                pauseMinutes = 15;
+                logger.Warn($"pauseMinutes задан некорректно. Установлено pauseMinutes={pauseMinutes}");
             }
             if (cacheMinutes<1)
             {
