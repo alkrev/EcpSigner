@@ -279,7 +279,7 @@ namespace EcpSigner
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
                     (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) = SelectCertificate(certs, t);
-                    logger.Debug(string.Format("[{0}] сертификат выбран: {1} срок действия {2}", t, userCert.SubjectName, userCert.ValidToDate.ToString("dd.MM.yyyy")));
+                    logger.Debug(string.Format("[{0}] сертификат выбран: {1} срок действия {2}", t, userCert.SubjectName, userCert.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
 
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
@@ -394,16 +394,17 @@ namespace EcpSigner
         */
         private (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) SelectCertificate(List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, int t)
         {
+            DateTime now = DateTime.Now;
             foreach (Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate> cert in certs)
             {
-                //if (cert.Item2.IsValid().Result)
-                //{
+                if (now + TimeSpan.FromMilliseconds(200) < cert.Item2.ValidToDate)
+                {
                     return (cert.Item1, cert.Item2);
-                //}
-                //else
-                //{
-                //    logger.Warn(string.Format("[{0}]сертификат невалидный: {1} срок действия {2}", t, cert.Item2.SubjectName, cert.Item2.ValidToDate.ToString("dd.MM.yyyy")));
-                //}
+                }
+                else
+                {
+                    logger.Warn(string.Format("[{0}]сертификат невалидный: {1} срок действия {2}", t, cert.Item2.SubjectName, cert.Item2.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
+                }
             }
             throw new Exception("подходящие сертификаты не найдены");
         }
