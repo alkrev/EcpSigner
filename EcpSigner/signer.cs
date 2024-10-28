@@ -354,7 +354,7 @@ namespace EcpSigner
             DateTime now = DateTime.Now;
             foreach (Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate> cert in certs)
             {
-                if (now + TimeSpan.FromMilliseconds(200) < cert.Item2.ValidToDate)
+                if (now + TimeSpan.FromMilliseconds(600) < cert.Item2.ValidToDate)
                 {
                     return (cert.Item1, cert.Item2);
                 }
