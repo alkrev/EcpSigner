@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Portal;
 using Cryptography;
-using System.Linq;
 using System.Threading;
 using CacheTools;
 using System.Diagnostics;
@@ -32,7 +31,9 @@ namespace EcpSigner
         public async Task DoWork(string[] args)
         {
             string ver = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
-            logger.Info($"EcpSigner v{ver}");
+            string title = $"EcpSigner v{ver}";
+            logger.Info(title);
+            Console.Title = title;
 
             // Устанавливаем рабочую папку
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -85,7 +86,7 @@ namespace EcpSigner
                 {
                     logger.Error($"{ex.Message ?? "MainLoop: ошибка"}");
                 }
-                for (int i=0; i<60; i++)
+                for (int i=0; i<s.pauseMinutes*60; i++)
                 {
                     if (token.IsCancellationRequested)
                     {
@@ -144,14 +145,12 @@ namespace EcpSigner
 
             logger.Info("подписываем документы");
             startTime = DateTime.UtcNow;
-            Tuple<int, List<string>>[] results = await SignDocsSimultaneously(p, docs, certs, s.threadCount, token);
-            int count = results.Select(x => x.Item1).Sum(); // Количество успешно подписанных документов
-            foreach (Tuple<int, List<string>> result in results)
-            {
-                p.cache.SetRange(result.Item2); // Кешируем документы, которые возвращают ошибку при подписании
-            }
+            (int, List<string>) result = await SignDocs(p, docs, certs, token);
+            int count = result.Item1; // Количество успешно подписанных документов
+            p.cache.SetRange(result.Item2); // Кешируем документы, которые возвращают ошибку при подписании
+            
             stopTime = DateTime.UtcNow;
-            logger.Info(string.Format("подписано документов {0} за {1:f} секунд " + string.Join("", results.Select(x => $"[{x.Item1}]")) + " Кеш: {2}", count, (stopTime - startTime).TotalSeconds, p.cache.Count()));
+            logger.Info(string.Format("подписано документов [{0}] за {1:f} секунд. Кеш: {2}", count, (stopTime - startTime).TotalSeconds, p.cache.Count()));
         }
         /**
          * Убираем документы подписываемые вручную
@@ -223,51 +222,9 @@ namespace EcpSigner
             }
         }
         /**
-        * Подписываем документы в несколько потоков
-        */
-        private async Task<Tuple<int, List<string>>[]> SignDocsSimultaneously(Portal p, List<loadEMDSignBundleWindowReply> docs, List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, int threads, CancellationToken token)
-        {
-            if (threads <= 0)
-            {
-                threads = 1;
-            }
-            List<Task<Tuple<int, List<string>>>> tasks = new List<Task<Tuple<int, List<string>>>>(threads);
-            for (int i=0; i<threads; i++)
-            {
-                List<loadEMDSignBundleWindowReply> taskDocs = docs.Where((x, j) => j % threads == i).ToList();
-                int threadNum = i;
-                tasks.Add(SignDocs(p, taskDocs, certs, threadNum, token));
-            }
-            Tuple<int, List<string>>[] results = new Tuple<int, List<string>>[0];
-            Task<Tuple<int, List<string>>[]> task = Task.WhenAll(tasks);
-            try
-            {
-                results = await task;
-            }
-            catch (Exception e)
-            {
-                if (task.Exception != null && task.Exception.InnerExceptions != null)
-                {
-                    foreach (Exception ex in task.Exception.InnerExceptions)
-                    {
-                        if (ex is IsNotLoggedInException)
-                        {
-                            throw ex;
-                        }
-                        if (ex is StopWorkException)
-                        {
-                            throw ex;
-                        }
-                    }
-                }
-                throw e;
-            }
-            return results;
-        }
-        /**
         * Подписываем документы
         */
-        private async Task<Tuple<int, List<string>>> SignDocs(Portal p, List<loadEMDSignBundleWindowReply> docs, List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, int t, CancellationToken token)
+        private async Task<(int, List<string>)> SignDocs(Portal p, List<loadEMDSignBundleWindowReply> docs, List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, CancellationToken token)
         {
             int count = 0;
             List<string> errorDocNums = new List<string>();
@@ -278,34 +235,34 @@ namespace EcpSigner
                 {
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
-                    (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) = SelectCertificate(certs, t);
-                    logger.Debug(string.Format("[{0}] сертификат выбран: {1} срок действия {2}", t, userCert.SubjectName, userCert.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
+                    (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) = SelectCertificate(certs);
+                    logger.Debug(string.Format("сертификат выбран: {0} срок действия {1}", userCert.SubjectName, userCert.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
 
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
                     await CheckBeforeSign(p, doc, ecpCert);
-                    logger.Debug(string.Format("[{0}] проверка перед подписанием документа {1} прошла успешно", t, document));
+                    logger.Debug(string.Format("проверка перед подписанием документа {0} прошла успешно", document));
 
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
                     (string docBase64, string hashBase64) = await GetEMDVersionSignData(p, doc, ecpCert);
-                    logger.Debug(string.Format("[{0}] получение документа для подписания {1} прошло успешно", t, document));
+                    logger.Debug(string.Format("получение документа для подписания {0} прошло успешно", document));
 
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
                     string signature = Crypto.Sign(userCert, docBase64);
-                    logger.Debug(string.Format("[{0}] подпись {1} создана", t, document));
+                    logger.Debug(string.Format("подпись {0} создана", document));
 
                     if (token.IsCancellationRequested) throw new StopWorkException();
 
                     string EMDSignatureid = await SaveEMDSignature(p, doc, ecpCert, signature, hashBase64);
-                    logger.Debug(string.Format("[{0}] подпись документа {1} сохранена на сервере", t, document));
+                    logger.Debug(string.Format("подпись документа {0} сохранена на сервере", document));
 
                     count++;
                 }
                 catch (WarningException ex)
                 {
-                    logger.Warn($"[{t}]{document}: {ex.Message ?? "SignDocs: warning"}");
+                    logger.Warn($"{document}: {ex.Message ?? "SignDocs: warning"}");
                     errorDocNums.Add(doc.EMDRegistry_ObjectID);
                 }
                 catch (IsNotLoggedInException)
@@ -318,11 +275,11 @@ namespace EcpSigner
                 }
                 catch (Exception ex)
                 {
-                    logger.Error($"[{t}]{document}: {ex.Message ?? "SignDocs: ошибка"}");
+                    logger.Error($"{document}: {ex.Message ?? "SignDocs: ошибка"}");
                     break;
                 }
             }
-            return new Tuple<int, List<string>> (count, errorDocNums);
+            return (count, errorDocNums);
         }
         /**
         * Сохранение подписи документа
@@ -392,7 +349,7 @@ namespace EcpSigner
         /**
         * Проверяем сертификаты
         */
-        private (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) SelectCertificate(List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, int t)
+        private (loadEMDCertificateListReply ecpCert, CAPICOM.ICertificate userCert) SelectCertificate(List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs)
         {
             DateTime now = DateTime.Now;
             foreach (Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate> cert in certs)
@@ -403,7 +360,7 @@ namespace EcpSigner
                 }
                 else
                 {
-                    logger.Warn(string.Format("[{0}]сертификат невалидный: {1} срок действия {2}", t, cert.Item2.SubjectName, cert.Item2.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
+                    logger.Warn(string.Format("сертификат невалидный: {0} срок действия {1}", cert.Item2.SubjectName, cert.Item2.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
                 }
             }
             throw new Exception("подходящие сертификаты не найдены");
