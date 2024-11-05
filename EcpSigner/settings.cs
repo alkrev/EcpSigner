@@ -13,6 +13,7 @@ namespace EcpSigner
         public string url { get; set; }
         public int pauseMinutes { get; set; }
         public int cacheMinutes { get; set; }
+        public int signingIntervalSeconds { get; set; }
         public List<string> ignoreDocTypes { get; set; }
         public Dictionary<string, byte> ignoreDocTypesDict { get; set; }
    
@@ -41,7 +42,7 @@ namespace EcpSigner
             {
                 throw new Exception("url сайта ЕЦП не задан");
             }
-            if (pauseMinutes < 1 || pauseMinutes > 7*60*12 )
+            if (pauseMinutes < 1 || pauseMinutes > 7*60*24 )
             {
                 pauseMinutes = 15;
                 logger.Warn($"pauseMinutes задан некорректно. Установлено pauseMinutes={pauseMinutes}");
@@ -50,6 +51,11 @@ namespace EcpSigner
             {
                 cacheMinutes = 360;
                 logger.Warn($"cacheMinutes задан некорректно. Установлено cacheMinutes={cacheMinutes}");
+            }
+            if (signingIntervalSeconds < 1 || signingIntervalSeconds > 60)
+            {
+                signingIntervalSeconds = 2;
+                logger.Warn($"signingIntervalSeconds задан некорректно. Установлено signingIntervalSeconds={signingIntervalSeconds}");
             }
         }
     }
