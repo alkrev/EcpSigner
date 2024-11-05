@@ -151,6 +151,15 @@ namespace EcpSigner
             
             stopTime = DateTime.UtcNow;
             logger.Info(string.Format("подписано документов [{0}] за {1:f} секунд. Кеш: {2}", count, (stopTime - startTime).TotalSeconds, p.cache.Count()));
+
+            for (int i = 0; i < s.signingIntervalSeconds; i++)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+                await Task.Delay(1 * 1000);
+            }
         }
         /**
          * Убираем документы подписываемые вручную
