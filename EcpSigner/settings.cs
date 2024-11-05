@@ -54,7 +54,7 @@ namespace EcpSigner
             }
             if (signingIntervalSeconds < 1 || signingIntervalSeconds > 60)
             {
-                signingIntervalSeconds = 2;
+                signingIntervalSeconds = 1;
                 logger.Warn($"signingIntervalSeconds задан некорректно. Установлено signingIntervalSeconds={signingIntervalSeconds}");
             }
         }
