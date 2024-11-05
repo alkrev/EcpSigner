@@ -190,7 +190,7 @@ namespace EcpSigner
             {
                 if (!string.IsNullOrEmpty(doc.Error_Msg))
                 {
-                    logger.Info("'{0} - {1} ({2}): {3}'", doc.Document_Name, doc.Document_Num, doc.EMDVersion_VersionNum, doc.Error_Msg);
+                    logger.Info("'{0} - {1} ({2})': {3}", doc.Document_Name, doc.Document_Num, doc.EMDVersion_VersionNum, doc.Error_Msg);
                 }
             }
             return;
