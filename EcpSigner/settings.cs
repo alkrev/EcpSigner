@@ -42,12 +42,12 @@ namespace EcpSigner
             {
                 throw new Exception("url сайта ЕЦП не задан");
             }
-            if (pauseMinutes < 1 || pauseMinutes > 7*60*24 )
+            if (pauseMinutes < 1 || pauseMinutes > 7*60*24)
             {
                 pauseMinutes = 15;
                 logger.Warn($"pauseMinutes задан некорректно. Установлено pauseMinutes={pauseMinutes}");
             }
-            if (cacheMinutes<1)
+            if (cacheMinutes < 1)
             {
                 cacheMinutes = 360;
                 logger.Warn($"cacheMinutes задан некорректно. Установлено cacheMinutes={cacheMinutes}");
