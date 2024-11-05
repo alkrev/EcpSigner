@@ -145,21 +145,12 @@ namespace EcpSigner
 
             logger.Info("подписываем документы");
             startTime = DateTime.UtcNow;
-            (int, List<string>) result = await SignDocs(p, docs, certs, token);
+            (int, List<string>) result = await SignDocs(p, docs, certs, s, token);
             int count = result.Item1; // Количество успешно подписанных документов
             p.cache.SetRange(result.Item2); // Кешируем документы, которые возвращают ошибку при подписании
             
             stopTime = DateTime.UtcNow;
             logger.Info(string.Format("подписано документов [{0}] за {1:f} секунд. Кеш: {2}", count, (stopTime - startTime).TotalSeconds, p.cache.Count()));
-
-            for (int i = 0; i < s.signingIntervalSeconds; i++)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    break;
-                }
-                await Task.Delay(1 * 1000);
-            }
         }
         /**
          * Убираем документы подписываемые вручную
@@ -233,7 +224,7 @@ namespace EcpSigner
         /**
         * Подписываем документы
         */
-        private async Task<(int, List<string>)> SignDocs(Portal p, List<loadEMDSignBundleWindowReply> docs, List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, CancellationToken token)
+        private async Task<(int, List<string>)> SignDocs(Portal p, List<loadEMDSignBundleWindowReply> docs, List<Tuple<loadEMDCertificateListReply, CAPICOM.ICertificate>> certs, Settings s, CancellationToken token)
         {
             int count = 0;
             List<string> errorDocNums = new List<string>();
@@ -286,6 +277,14 @@ namespace EcpSigner
                 {
                     logger.Error($"{document}: {ex.Message ?? "SignDocs: ошибка"}");
                     break;
+                }
+                for (int i = 0; i < s.signingIntervalSeconds; i++)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    await Task.Delay(1 * 1000);
                 }
             }
             return (count, errorDocNums);
