@@ -19,6 +19,7 @@ namespace Web
             var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             client = new HttpClient(handler);
             this.url = url;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
         public async Task<string> Post(string url, Dictionary<string, string> parameters, string referer)
         {
