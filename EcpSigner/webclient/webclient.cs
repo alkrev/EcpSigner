@@ -33,6 +33,11 @@ namespace Web
                 var response = await client.SendAsync(requestMessage);
                 responseString = await response.Content.ReadAsStringAsync();
             }
+            catch (HttpRequestException e)
+            {
+                string err = "Post: " + e.InnerException.Message ?? e.Message ?? "ошибка";
+                throw new NetworkException(err);
+            }
             catch (Exception e)
             {
                 string err = "Post: " + e.Message ?? "ошибка";
