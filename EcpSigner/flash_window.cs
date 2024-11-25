@@ -19,7 +19,8 @@ namespace EcpSigner
             public Int32 dwTimeout;
         }
 
-        public const UInt32 FLASHW_ALL = 3;
+        public const UInt32 FLASHW_ALL = 0x3;
+        public const UInt32 FLASHW_TIMERNOFG = 0xC;
 
         public static void Start(IntPtr hWnd)
         {
@@ -27,7 +28,7 @@ namespace EcpSigner
 
             fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
             fInfo.hwnd = hWnd;
-            fInfo.dwFlags = FLASHW_ALL;
+            fInfo.dwFlags = FLASHW_ALL|FLASHW_TIMERNOFG;
             fInfo.uCount = UInt32.MaxValue;
             fInfo.dwTimeout = 0;
 
