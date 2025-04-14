@@ -79,7 +79,7 @@ namespace EcpSigner
                 }
                 catch (IsNotLoggedInException)
                 {
-                    logger.Warn($"{"вход не выполнен"}");
+                    logger.Warn("вход не выполнен");
                     p.isLoggedOn = false;
                 }
                 catch (Exception ex)
