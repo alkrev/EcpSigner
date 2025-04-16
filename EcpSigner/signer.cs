@@ -153,8 +153,8 @@ namespace EcpSigner
         }
 
         /**
-* Получаем и подписываем документы
-*/
+        * Получаем и подписываем документы
+        */
         private async Task signDocuments(string[] args, Portal p, Settings s, CancellationToken token)
         {
             (string startDate, string endDate) = GetDates(args);
