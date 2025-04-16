@@ -164,6 +164,8 @@ namespace EcpSigner
             stopTime = DateTime.UtcNow;
             logger.Info(string.Format("получено документов {0} за {1:f} секунд", sdocs.Count, (stopTime - startTime).TotalSeconds));
 
+            p.cache.RemoveExpired(); // Убираем просроченные документы из кеша
+
             showDocWithErrors(sdocs.FindAll(x => x.IsSigned == "2")); // Показываем документы с ошибками
 
             // Убираем документы, которые не будем пытаться подписывать
