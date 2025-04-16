@@ -102,10 +102,12 @@ namespace EcpSigner
             Web.Client wc = new Web.Client(s.url);
             Cache c = new Cache(s.cacheMinutes);
             Portal p = new Portal(wc, c);
+            DateTime lastCheck = DateTime.Now;
             while (true)
             {
                 try
                 {
+                    cacheRemoveExpired(ref lastCheck, c);
                     await signDocuments(args, p, s, token);
                 }
                 catch (BreakWorkException ex)
@@ -136,9 +138,23 @@ namespace EcpSigner
                 }
             }
         }
-        /**
-         * Получаем и подписываем документы
+        /** 
+         * Удаляем просроченные документы и кеша
          */
+        private void cacheRemoveExpired(ref DateTime lastCheck, Cache c)
+        {
+            DateTime now = DateTime.Now;
+            if (lastCheck.Day != now.Day)
+            {
+                logger.Info("очищаем кеш");
+                c.RemoveExpired();
+                lastCheck = now;
+            }
+        }
+
+        /**
+* Получаем и подписываем документы
+*/
         private async Task signDocuments(string[] args, Portal p, Settings s, CancellationToken token)
         {
             (string startDate, string endDate) = GetDates(args);
@@ -163,8 +179,6 @@ namespace EcpSigner
             List<loadEMDSignBundleWindowReply> sdocs = await SearchDocuments(p, startDate, endDate, token);
             stopTime = DateTime.UtcNow;
             logger.Info(string.Format("получено документов {0} за {1:f} секунд", sdocs.Count, (stopTime - startTime).TotalSeconds));
-
-            p.cache.RemoveExpired(); // Убираем просроченные документы из кеша
 
             showDocWithErrors(sdocs.FindAll(x => x.IsSigned == "2")); // Показываем документы с ошибками
 
