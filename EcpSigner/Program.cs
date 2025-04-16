@@ -6,8 +6,8 @@ namespace EcpSigner
     {
         static void Main(string[] args)
         {
-            var signer = new Signer();
-            Task.Run(async () => await signer.DoWork(args)).Wait();
+            var signer = new Signer(args);
+            Task.Run(async () => await signer.Run()).Wait();
         }
     }
 }
