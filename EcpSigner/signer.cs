@@ -7,11 +7,17 @@ using System.Threading;
 using CacheTools;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace EcpSigner
 {
     internal class Signer
     {
+        private string[] args;
+        public Signer(string[] args)
+        {
+            this.args = args;
+        }
         /** 
         * Инициализируем логгер
         */
@@ -28,7 +34,7 @@ namespace EcpSigner
         /** 
         * Главная функция программы
         */
-        public async Task DoWork(string[] args)
+        public async Task Run()
         {
             string ver = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
             string title = $"EcpSigner v{ver}";
@@ -45,7 +51,8 @@ namespace EcpSigner
             try
             {
                 Settings s = Settings.Read("config.json");
-                s.CheckSettings(logger);
+                CheckSettings(s);
+                s.ignoreDocTypesDict = s.ignoreDocTypes.ToDictionary(x => x, x => (byte)1);
                 await MainLoop(args, s, token);
             }
             catch (Exception ex)
@@ -53,6 +60,39 @@ namespace EcpSigner
                 logger.Fatal($"{ex.Message ?? "DoWork: фатальная ошибка"}");
             }
             logger.Info("работа завершена");
+        }
+        /** 
+         * Проверка настроек
+         */
+        public void CheckSettings(Settings s)
+        {
+            if (string.IsNullOrEmpty(s.login))
+            {
+                throw new Exception("login пользователя не задан");
+            }
+            if (string.IsNullOrEmpty(s.password))
+            {
+                throw new Exception("password пользователя не задан");
+            }
+            if (string.IsNullOrEmpty(s.url))
+            {
+                throw new Exception("url сайта ЕЦП не задан");
+            }
+            if (s.pauseMinutes < 1 || s.pauseMinutes > 7 * 60 * 24)
+            {
+                s.pauseMinutes = 15;
+                logger.Warn($"pauseMinutes задан некорректно. Установлено pauseMinutes={s.pauseMinutes}");
+            }
+            if (s.cacheMinutes < 1)
+            {
+                s.cacheMinutes = 360;
+                logger.Warn($"cacheMinutes задан некорректно. Установлено cacheMinutes={s.cacheMinutes}");
+            }
+            if (s.signingIntervalSeconds < 1 || s.signingIntervalSeconds > 60)
+            {
+                s.signingIntervalSeconds = 1;
+                logger.Warn($"signingIntervalSeconds задан некорректно. Установлено signingIntervalSeconds={s.signingIntervalSeconds}");
+            }
         }
         /** 
          * Основной цикл
