@@ -50,9 +50,7 @@ namespace EcpSigner
             Console.CancelKeyPress += CancelKeyPressHandler;
             try
             {
-                Settings s = Settings.Read("config.json");
-                CheckSettings(s);
-                s.ignoreDocTypesDict = s.ignoreDocTypes.ToDictionary(x => x, x => (byte)1);
+                Settings s = GetSettings();
                 await MainLoop(args, s, token);
             }
             catch (Exception ex)
@@ -61,9 +59,19 @@ namespace EcpSigner
             }
             logger.Info("работа завершена");
         }
-        /** 
-         * Проверка настроек
+        /**
+         * Получаем настройки
          */
+        private Settings GetSettings()
+        {
+            Settings s = Settings.Read("config.json");
+            CheckSettings(s);
+            s.ignoreDocTypesDict = s.ignoreDocTypes.ToDictionary(x => x, x => (byte)1);
+            return s;
+        }
+        /** 
+        * Проверка настроек
+        */
         public void CheckSettings(Settings s)
         {
             if (string.IsNullOrEmpty(s.login))
