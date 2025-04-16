@@ -147,7 +147,7 @@ namespace EcpSigner
             }
         }
         /** 
-         * Удаляем просроченные документы и кеша
+         * Удаляем просроченные документы из кеша
          */
         private void cacheRemoveExpired(ref DateTime lastCheck, Cache c)
         {
