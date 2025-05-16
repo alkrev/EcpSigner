@@ -1,4 +1,5 @@
 ﻿using DocumentSigner.Application.Jobs;
+using EcpSigner.Application.Decorators;
 using EcpSigner.Application.Interfaces;
 using EcpSigner.Application.Jobs;
 using EcpSigner.Domain.Interfaces;
@@ -40,8 +41,8 @@ namespace EcpSigner
                 var flashWindowService = new FlashWindowService(new FlashWindow(Process.GetCurrentProcess().MainWindowHandle));
                 // Бизнес-логика (приложение)
                 var signDocumentWorflow = new SignDocumentWorflow(portalServiceDecorator, signatureServiceDecorator, logger);
-                var signDocumentsLoop = new SignDocumentsLoop(logger, config, signDocumentWorflow);
-                var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoop);
+                var signDocumentsLoopDecorator = new SignDocumentsLoopDecorator(new SignDocumentsLoop(logger, config, signDocumentWorflow), cache, logger);
+                var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoopDecorator);
                 var documentSigningJob = new DocumentSigningJob(prepareSigningWorkflow, logger);
                 // Название программы
                 new AppTitleService(logger).Set();
