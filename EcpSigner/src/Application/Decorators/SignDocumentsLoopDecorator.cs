@@ -30,7 +30,7 @@ namespace EcpSigner.Application.Decorators
             _cache.SetRange(docsToCache); // Кешируем документы, которые возвращают ошибку при подписании
             var stopTime = DateTime.UtcNow;
             var elapsedTime = stopTime - startTime;
-            _logger.Info($"подписано документов [{signedCount}] за {elapsedTime:f} секунд. Кеш: {_cache.Count()}");
+            _logger.Info($"подписано документов [{signedCount}] за {elapsedTime.TotalSeconds:f} секунд. Кеш: {_cache.Count()}");
             return (signedCount, docsToCache);
         }
     }
