@@ -63,11 +63,8 @@ namespace DocumentSigner.Application.Jobs
                 ShowIgnoredDocuments(docs);
                 FlashWindowIfThereAreIgnoredDocuments(docs);
                 var filteredDocs = FilterDocuments(docs);
-                var ecpCerts = await LoadEcpCertificates();
-                var userCerts = GetCertificates();
-                var matchedCerts = GetMatchedCertificates(ecpCerts, userCerts);
-                var suitableCerts = GetSuitableCertificates(matchedCerts);
-                await SignDocumentsLoop(filteredDocs, suitableCerts, cancellationToken);
+                var certs = await GetCertificatesWithTime();
+                await SignDocumentsLoop(filteredDocs, certs, cancellationToken);
             }
             catch (IsNotLoggedInException)
             {
@@ -76,7 +73,31 @@ namespace DocumentSigner.Application.Jobs
             }
         }
         /// <summary>
-        /// Ищем "рабочие" сертификаты, для новых сертифкатов запрашивается пинкод
+        /// Получаем подходящие для подписи сертификаты c замеров времени
+        /// </summary>
+        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificatesWithTime()
+        {
+            _logger.Info("получаем список сертификатов");
+            DateTime startTime = DateTime.UtcNow;
+            var certs = await GetCertificates();
+            DateTime stopTime = DateTime.UtcNow;
+            var elapsedTime = stopTime - startTime;
+            _logger.Info($"получено сертификатов {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
+            return certs;
+        }
+        /// <summary>
+        /// Получаем подходящие для подписи сертификаты
+        /// </summary>
+        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificates()
+        {
+            var ecpCerts = await LoadEcpCertificates();
+            var userCerts = GetUserCertificates();
+            var matchedCerts = GetMatchedCertificates(ecpCerts, userCerts);
+            var suitableCerts = GetSuitableCertificates(matchedCerts);
+            return suitableCerts;
+        }
+        /// <summary>
+        /// Проверяем сертификаты, для новых сертифкатов запрашивается пинкод
         /// </summary>
         private List<(EcpCertificate, ICertificate)> GetSuitableCertificates(List<(EcpCertificate, ICertificate)> certs)
         {
@@ -125,7 +146,7 @@ namespace DocumentSigner.Application.Jobs
         /// <summary>
         /// Получаем список сертификатов
         /// </summary>
-        private Dictionary<string, CAPICOM.ICertificate> GetCertificates()
+        private Dictionary<string, CAPICOM.ICertificate> GetUserCertificates()
         {
             Dictionary<string, CAPICOM.ICertificate> certs = _signatureService.GetUserCertificates();
             return certs;
