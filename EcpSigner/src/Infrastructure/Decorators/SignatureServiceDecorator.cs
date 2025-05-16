@@ -21,12 +21,12 @@ namespace EcpSigner.Infrastructure.Decorators
 
         public Dictionary<string, ICertificate> GetUserCertificates()
         {
-            _logger.Info("получаем список сертификатов пользователя");
+            _logger.Debug("получаем список сертификатов пользователя");
             DateTime startTime = DateTime.UtcNow;
             var certs = _inner.GetUserCertificates();
             DateTime stopTime = DateTime.UtcNow;
             var elapsedTime = stopTime - startTime;
-            _logger.Info($"получено сертификатов пользователя {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
+            _logger.Debug($"получено сертификатов пользователя {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return certs;
         }
         public string Sign(ICertificate certificate, string docBase64, string document)
