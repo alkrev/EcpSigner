@@ -34,7 +34,7 @@ namespace EcpSigner.Application.Jobs
             (EcpCertificate ecpCert, ICertificate userCert) = SelectCertificate(certs, cancellationToken);
             await CheckBeforeSign(doc, ecpCert, docName, cancellationToken);
             (string docBase64, string hashBase64) = await GetSignData(doc, ecpCert, docName, cancellationToken);
-            string signature = Sign(docName, userCert, docBase64, cancellationToken);
+            string signature = Sign(docBase64, userCert, docName, cancellationToken);
             await SaveSignature(doc, ecpCert, signature, hashBase64, docName, cancellationToken);
         }
         /// <summary>
