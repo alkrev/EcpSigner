@@ -49,12 +49,12 @@ namespace EcpSigner.Infrastructure.Decorators
         }
         public async Task<List<EcpCertificate>> LoadEcpCertificates()
         {
-            _logger.Info("получаем список сертификатов");
+            _logger.Debug("загружаем список сертификатов ЕЦП");
             DateTime startTime = DateTime.UtcNow;
             List<EcpCertificate> certs = await _inner.LoadEcpCertificates();
             DateTime stopTime = DateTime.UtcNow;
             var elapsedTime = stopTime - startTime;
-            _logger.Info($"получено сертификатов {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
+            _logger.Debug($"загружено сертификатов ЕЦП {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return certs;
         }
         public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
