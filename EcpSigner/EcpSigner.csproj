@@ -52,29 +52,70 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="cache\cache.cs" />
-    <Compile Include="crypto\crypto.cs" />
-    <Compile Include="flash_window.cs" />
-    <Compile Include="portal\exceptions.cs" />
-    <Compile Include="portal\main.cs" />
-    <Compile Include="portal\emd.cs" />
-    <Compile Include="portal.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="src\Application\Decorators\SignDocumentsJobDecorator.cs" />
+    <Compile Include="src\Application\Filters\DocumentFilters.cs" />
+    <Compile Include="src\Application\Interfaces\ISignDocumentsLoop.cs" />
+    <Compile Include="src\Application\Interfaces\ISignDocumentWorflow.cs" />
+    <Compile Include="src\Application\Jobs\SignDocumentsLoop.cs" />
+    <Compile Include="src\Application\Jobs\SignDocumentWorflow.cs" />
+    <Compile Include="src\Application\Jobs\PrepareSigningWorkflow.cs" />
+    <Compile Include="src\Domain\Exceptions\DocumentSigning.cs" />
+    <Compile Include="src\Application\Interfaces\IJob.cs" />
+    <Compile Include="src\Application\Jobs\DocumentSigningJob.cs" />
+    <Compile Include="src\Domain\Interfaces\IAppTitleService.cs" />
+    <Compile Include="src\Domain\Interfaces\ICache.cs" />
+    <Compile Include="src\Domain\Interfaces\IConfigurationProvider.cs" />
+    <Compile Include="src\Domain\Interfaces\IDatesService.cs" />
+    <Compile Include="src\Domain\Interfaces\IFlashWindowService.cs" />
+    <Compile Include="src\Domain\Interfaces\ILogger.cs" />
+    <Compile Include="src\Domain\Interfaces\IPortalService.cs" />
+    <Compile Include="src\Domain\Interfaces\ISignatureService.cs" />
+    <Compile Include="src\Domain\Interfaces\IWorkerService.cs" />
+    <Compile Include="src\Domain\Models\Document.cs" />
+    <Compile Include="src\Domain\Models\AppSettings.cs" />
+    <Compile Include="src\Domain\Models\EcpCertificate.cs" />
+    <Compile Include="src\Infrastructure\AppTitleService.cs" />
+    <Compile Include="src\Infrastructure\Cache.cs" />
+    <Compile Include="src\Infrastructure\Configuration\JsonConfigurationProvider.cs" />
+    <Compile Include="src\Infrastructure\CtrlCCancellationTokenSource.cs" />
+    <Compile Include="src\Infrastructure\DatesService.cs" />
+    <Compile Include="src\Infrastructure\Decorators\PortalServiceDecorator.cs" />
+    <Compile Include="src\Infrastructure\Decorators\SignatureServiceDecorator.cs" />
+    <Compile Include="src\Infrastructure\FlashWindowService.cs" />
+    <Compile Include="src\Infrastructure\NLogLogger.cs" />
+    <Compile Include="src\Infrastructure\Repositories\SignatureService.cs" />
+    <Compile Include="src\Shared\cache\ICache.cs" />
+    <Compile Include="src\Shared\CryptographyTools\Store\CurrentUserStore.cs" />
+    <Compile Include="src\Shared\CryptographyTools\Signing\ISigning.cs" />
+    <Compile Include="src\Shared\CryptographyTools\Store\ICurrentUserStore.cs" />
+    <Compile Include="src\Shared\Portal\IEMD.cs" />
+    <Compile Include="src\Shared\Portal\IMain.cs" />
+    <Compile Include="src\Shared\WebTools\IClient.cs" />
+    <Compile Include="src\Infrastructure\WebClients\WebClient.cs" />
+    <Compile Include="src\Shared\cache\cache.cs" />
+    <Compile Include="src\Shared\CryptographyTools\Signing\CryptoPro\Crypto.cs" />
+    <Compile Include="src\Shared\Portal\IWebClient.cs" />
+    <Compile Include="src\Shared\WindowsTools\FlashWindow.cs" />
+    <Compile Include="src\Shared\Portal\exceptions.cs" />
+    <Compile Include="src\Shared\Portal\main.cs" />
+    <Compile Include="src\Shared\Portal\emd.cs" />
+    <Compile Include="src\Infrastructure\Repositories\PortalService.cs" />
+    <Compile Include="src\ConsoleApp\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="settings.cs" />
-    <Compile Include="webclient\webclient.cs" />
-    <Compile Include="signer.cs" />
+    <Compile Include="src\Infrastructure\Configuration\Settings.cs" />
+    <Compile Include="src\Shared\WebTools\Client.cs" />
+    <Compile Include="src\Infrastructure\Workers\DocumentSigningWorker.cs" />
+    <Compile Include="src\Shared\WindowsTools\IFlashWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.json.example">
+    <None Include="src\Infrastructure\Configuration\config.json.example">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="NLog.config">
@@ -110,6 +151,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tests\Application.Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
