@@ -58,7 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Application\Decorators\SignDocumentsJobDecorator.cs" />
+    <Compile Include="src\Application\Decorators\SignDocumentsLoopDecorator.cs" />
     <Compile Include="src\Application\Filters\DocumentFilters.cs" />
     <Compile Include="src\Application\Interfaces\ISignDocumentsLoop.cs" />
     <Compile Include="src\Application\Interfaces\ISignDocumentWorflow.cs" />
@@ -115,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="src\Infrastructure\Configuration\config.json.example">
+    <None Include="config.json.example">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="NLog.config">
