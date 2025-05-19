@@ -22,18 +22,17 @@ namespace EcpSigner.Infrastructure.Workers
         /// </summary>
         public async Task Run(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     await _job.RunAsync(stoppingToken);
+                    await Task.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), stoppingToken); // интервал между задачами
                 }
-                catch (Exception ex)
-                {
-                    _logger.Debug($"остановка: {ex.Message??"необработанное исключение"}");
-                    break;
-                }
-                await Task.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), stoppingToken); // интервал между задачами
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug($"остановка: {ex.Message ?? "необработанное исключение"}");
             }
             _logger.Info("работа завершена");
         }
