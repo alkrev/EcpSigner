@@ -71,6 +71,7 @@
     <Compile Include="src\Domain\Interfaces\IAppTitleService.cs" />
     <Compile Include="src\Domain\Interfaces\ICache.cs" />
     <Compile Include="src\Domain\Interfaces\IConfigurationProvider.cs" />
+    <Compile Include="src\Domain\Interfaces\IConsoleControlService.cs" />
     <Compile Include="src\Domain\Interfaces\IDatesService.cs" />
     <Compile Include="src\Domain\Interfaces\IFlashWindowService.cs" />
     <Compile Include="src\Domain\Interfaces\ILogger.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="src\Infrastructure\AppTitleService.cs" />
     <Compile Include="src\Infrastructure\Cache.cs" />
     <Compile Include="src\Infrastructure\Configuration\JsonConfigurationProvider.cs" />
+    <Compile Include="src\Infrastructure\ConsoleControlService.cs" />
     <Compile Include="src\Infrastructure\CtrlCCancellationTokenSource.cs" />
     <Compile Include="src\Infrastructure\DatesService.cs" />
     <Compile Include="src\Infrastructure\Decorators\PortalServiceDecorator.cs" />

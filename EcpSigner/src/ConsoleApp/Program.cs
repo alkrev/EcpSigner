@@ -27,6 +27,7 @@ namespace EcpSigner
         static void Main(string[] args)
         {
             var logger = new NLogLogger(LogManager.GetLogger("EcpSigner"));
+            ConsoleControlService ccs = null;
             try
             {
                 // Собираем DI
@@ -48,7 +49,10 @@ namespace EcpSigner
                 // Название программы
                 new AppTitleService(logger).Set();
                 // Источник остановки работы
-                var source = new ConsoleCtrlCCancellationTokenSource();
+                ccs = new ConsoleControlService();
+                ccs.StartListening();
+                var source = ccs.GetCancellationTokenSource();
+                //var source = new ConsoleCtrlCCancellationTokenSource();
                 // Запуск
                 var worker = new DocumentSigningWorker(documentSigningJob, logger, config);
                 Task.Run(async () => await worker.Run(source.Token)).Wait();
@@ -59,6 +63,7 @@ namespace EcpSigner
             }
             finally
             {
+                ccs?.Dispose();
                 LogManager.Shutdown();
             }
         }
