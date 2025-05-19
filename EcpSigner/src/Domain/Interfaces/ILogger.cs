@@ -8,6 +8,7 @@ namespace EcpSigner.Domain.Interfaces
 {
     public interface ILogger
     {
+        void Flush();
         void Debug(string message);
         void Info(string message);
         void Warn(string message);

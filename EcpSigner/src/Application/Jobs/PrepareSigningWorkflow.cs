@@ -65,12 +65,20 @@ namespace DocumentSigner.Application.Jobs
                 var filteredDocs = FilterDocuments(docs);
                 var certs = await GetCertificatesWithTime();
                 await SignDocumentsLoop(filteredDocs, certs, cancellationToken);
+                LoggerFlush();
             }
             catch (IsNotLoggedInException)
             {
                 isLoggedOn = false;
                 throw;
             }
+        }
+        /// <summary>
+        /// Сохраняем лог
+        /// </summary>
+        private void LoggerFlush()
+        {
+            _logger.Flush();
         }
         /// <summary>
         /// Получаем подходящие для подписи сертификаты c замеров времени
