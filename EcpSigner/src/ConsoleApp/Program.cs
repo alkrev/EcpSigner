@@ -12,6 +12,7 @@ using EcpSigner.Infrastructure.WebClients;
 using EcpSigner.Infrastructure.Workers;
 using NLog;
 using Portal;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using WindowsTools;
@@ -25,11 +26,11 @@ namespace EcpSigner
         /// </summary>
         static void Main(string[] args)
         {
+            var logger = new NLogLogger(LogManager.GetLogger("EcpSigner"));
             try
             {
                 // Собираем DI
                 // Инфраструктура с использованием библиотек
-                var logger = new NLogLogger(LogManager.GetLogger("EcpSigner"));
                 var config = new JsonConfigurationProvider(logger, "config.json");
                 var webClient = new WebClient(new WebTools.Client(config.Get().url));
                 var portalServiceDecorator = new PortalServiceDecorator(new PortalService(new Main(webClient), new EMD(webClient)), logger);
@@ -51,6 +52,10 @@ namespace EcpSigner
                 // Запуск
                 var worker = new DocumentSigningWorker(documentSigningJob, logger, config);
                 Task.Run(async () => await worker.Run(source.Token)).Wait();
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"необработанне исключение: {ex.Message??""}");
             }
             finally
             {
