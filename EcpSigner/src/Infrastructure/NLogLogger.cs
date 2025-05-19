@@ -15,6 +15,7 @@ namespace EcpSigner.Infrastructure
         {
             _logger = logger;
         }
+        public void Flush() => NLog.LogManager.Flush();
         public void Debug(string message) => _logger.Debug(message);
         public void Info(string message) => _logger.Info(message);
         public void Error(string message) => _logger.Error(message);
