@@ -44,7 +44,7 @@ namespace EcpSigner.Application.Jobs
         private async Task SaveSignature(Document doc, EcpCertificate ecpCert, string signature, string hashBase64, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            await _repository.SaveSignature(doc, hashBase64, signature, ecpCert, docName);
+            await _repository.SaveSignature(doc, hashBase64, signature, ecpCert, docName, cancellationToken);
         }
         /// <summary>
         /// Вычисляем подпись
@@ -61,7 +61,7 @@ namespace EcpSigner.Application.Jobs
         private async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            (string docBase64, string hashBase64) = await _repository.GetSignData(doc, ecpCert, docName);
+            (string docBase64, string hashBase64) = await _repository.GetSignData(doc, ecpCert, docName, cancellationToken);
             return (docBase64, hashBase64);
         }
         /// <summary>
@@ -90,7 +90,7 @@ namespace EcpSigner.Application.Jobs
         private async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            await _repository.CheckBeforeSign(doc, ecpCert, docName);
+            await _repository.CheckBeforeSign(doc, ecpCert, docName, cancellationToken);
         }
     }
 }

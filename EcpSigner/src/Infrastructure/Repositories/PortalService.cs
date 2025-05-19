@@ -30,9 +30,9 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Выполняем вход
         /// </summary>
-        public async Task Login(string login, string password)
+        public async Task Login(string login, string password, CancellationToken cancellationToken)
         {
-            loginReply rep = await _main.Login(login, password);
+            loginReply rep = await _main.Login(login, password, cancellationToken);
             if (!rep.success)
             {
                 string err = rep.Error_Msg;
@@ -54,7 +54,7 @@ namespace EcpSigner.Infrastructure.Repositories
                 while (true)
                 {
                     if (token.IsCancellationRequested) throw new StopWorkException();
-                    List<Document> rep = await GetDocumentPage(startDate, endDate, start, page, count);
+                    List<Document> rep = await GetDocumentPage(startDate, endDate, start, page, count, token);
                     if (rep.Count == 0)
                     {
                         break;
@@ -73,9 +73,9 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Получаем "страницу" документов
         /// </summary>
-        private async Task<List<Document>> GetDocumentPage(string startDate, string endDate, int start, int page, int count)
+        private async Task<List<Document>> GetDocumentPage(string startDate, string endDate, int start, int page, int count, CancellationToken cancellationToken)
         {
-            List<loadEMDSignBundleWindowReply> rep = await _emd.loadEMDSignBundleWindow(startDate, endDate, start, page, count);
+            List<loadEMDSignBundleWindowReply> rep = await _emd.loadEMDSignBundleWindow(startDate, endDate, start, page, count, cancellationToken);
             List<Document> docs = new List<Document>(rep.Count);
             foreach (loadEMDSignBundleWindowReply r in rep)
             {
@@ -100,9 +100,9 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Загружаем сертификаты из ЕЦП
         /// </summary>
-        public async Task<List<EcpCertificate>> LoadEcpCertificates()
+        public async Task<List<EcpCertificate>> LoadEcpCertificates(CancellationToken cancellationToken)
         {
-            List<loadEMDCertificateListReply> certs = await _emd.loadEMDCertificateList();
+            List<loadEMDCertificateListReply> certs = await _emd.loadEMDCertificateList(cancellationToken);
             List<EcpCertificate> ecpCerts = new List<EcpCertificate>(certs.Count);
             foreach (loadEMDCertificateListReply cert in certs)
             {
@@ -121,11 +121,11 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Проверка возможности подписания
         /// </summary>
-        public async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             try
             {
-                checkBeforeSignReply rep = await _emd.checkBeforeSign(doc.Type, doc.ID, ecpCert.ID, doc.VersionID);
+                checkBeforeSignReply rep = await _emd.checkBeforeSign(doc.Type, doc.ID, ecpCert.ID, doc.VersionID, cancellationToken);
                 if (!rep.success)
                 {
                     string err = rep.Error_Msg;
@@ -140,12 +140,12 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Получаем документ и хеш для подписания
         /// </summary>
-        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             getEMDVersionSignDataReply rep;
             try
             {
-                rep = await _emd.getEMDVersionSignData(doc.Type, doc.ID, ecpCert.ID, doc.VersionNumber);
+                rep = await _emd.getEMDVersionSignData(doc.Type, doc.ID, ecpCert.ID, doc.VersionNumber, cancellationToken);
                 if (!rep.success)
                 {
                     string err = rep.Error_Msg;
@@ -163,12 +163,12 @@ namespace EcpSigner.Infrastructure.Repositories
             return (rep.toSign[0].docBase64, rep.toSign[0].hashBase64);
         }
 
-        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
+        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             saveEMDSignaturesReply rep;
             try
             {
-                rep = await _emd.saveEMDSignatures(doc.Type, doc.ID, doc.VersionID, hashBase64, signature, ecpCert.ID);
+                rep = await _emd.saveEMDSignatures(doc.Type, doc.ID, doc.VersionID, hashBase64, signature, ecpCert.ID, cancellationToken);
                 if (!rep.success)
                 {
                     string err = rep.Error_Msg;

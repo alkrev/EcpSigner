@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Portal
 {
@@ -15,7 +16,7 @@ namespace Portal
         /**
          * Выполняем поиск документов для подачи в РЭМД по диапазону дат
          */
-        public async Task<List<loadEMDSignBundleWindowReply>> loadEMDSignBundleWindow(string startDate, string endDate, int startIndex, int page, int limit = 100)
+        public async Task<List<loadEMDSignBundleWindowReply>> loadEMDSignBundleWindow(string startDate, string endDate, int startIndex, int page, int limit, CancellationToken cancellationToken)
         {
             string url = $"?c=EMD&m=loadEMDSignBundleWindow&_dc={DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds}";
             string referer = "?c=promed";
@@ -37,7 +38,7 @@ namespace Portal
             List<loadEMDSignBundleWindowReply> data;
             try
             {
-                data = await wc.Post<List<loadEMDSignBundleWindowReply>>(url, parameters, referer);
+                data = await wc.Post<List<loadEMDSignBundleWindowReply>>(url, parameters, referer, cancellationToken);
             }
             catch (DeserializeException ex)
             {
@@ -48,7 +49,7 @@ namespace Portal
         /**
          * Выполняем поиск сертификатов пользователя в ECP
          */
-        public async Task<List<loadEMDCertificateListReply>> loadEMDCertificateList()
+        public async Task<List<loadEMDCertificateListReply>> loadEMDCertificateList(CancellationToken cancellationToken)
         {
             string url = $"?c=EMD&m=loadEMDCertificateList&_dc={DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds}";
             string referer = "?c=promed";
@@ -63,7 +64,7 @@ namespace Portal
             List<loadEMDCertificateListReply> data;
             try
             {
-                data = await wc.Post<List<loadEMDCertificateListReply>>(url, parameters, referer);
+                data = await wc.Post<List<loadEMDCertificateListReply>>(url, parameters, referer, cancellationToken);
             }
             catch (DeserializeException ex)
             {
@@ -74,7 +75,7 @@ namespace Portal
         /**
          * Проверка перед подписанием
          */
-        public async Task<checkBeforeSignReply> checkBeforeSign(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDCertificate_id, string EMDVersion_id)
+        public async Task<checkBeforeSignReply> checkBeforeSign(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDCertificate_id, string EMDVersion_id, CancellationToken cancellationToken)
         {
             string url = $"?c=EMD&m=checkBeforeSign";
             string referer = "?c=promed";
@@ -89,7 +90,7 @@ namespace Portal
             checkBeforeSignReply data;
             try
             {
-                data = await wc.Post<checkBeforeSignReply>(url, parameters, referer);
+                data = await wc.Post<checkBeforeSignReply>(url, parameters, referer, cancellationToken);
             }
             catch (DeserializeException ex)
             {
@@ -100,7 +101,7 @@ namespace Portal
         /**
          * Получаем документ для подписания
          */
-        public async Task<getEMDVersionSignDataReply> getEMDVersionSignData(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDCertificate_id, int EMDVersion_VersionNum)
+        public async Task<getEMDVersionSignDataReply> getEMDVersionSignData(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDCertificate_id, int EMDVersion_VersionNum, CancellationToken cancellationToken)
         {
             string url = $"?c=EMD&m=getEMDVersionSignData";
             string referer = "?c=promed";
@@ -115,7 +116,7 @@ namespace Portal
             getEMDVersionSignDataReply data;
             try
             {
-                data = await wc.Post<getEMDVersionSignDataReply>(url, parameters, referer);
+                data = await wc.Post<getEMDVersionSignDataReply>(url, parameters, referer, cancellationToken);
             }
             catch (DeserializeException ex)
             {
@@ -126,7 +127,7 @@ namespace Portal
         /**
          * Сохраняем подпись
          */
-        public async Task<saveEMDSignaturesReply> saveEMDSignatures(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDVersion_id, string Signatures_Hash, string Signatures_SignedData, string EMDCertificate_id)
+        public async Task<saveEMDSignaturesReply> saveEMDSignatures(string EMDRegistry_ObjectName, string EMDRegistry_ObjectID, string EMDVersion_id, string Signatures_Hash, string Signatures_SignedData, string EMDCertificate_id, CancellationToken cancellationToken)
         {
             string url = $"?c=EMD&m=saveEMDSignatures";
             string referer = "?c=promed";
@@ -145,7 +146,7 @@ namespace Portal
             saveEMDSignaturesReply data;
             try
             {
-                data = await wc.Post<saveEMDSignaturesReply>(url, parameters, referer);
+                data = await wc.Post<saveEMDSignaturesReply>(url, parameters, referer, cancellationToken);
             }
             catch (DeserializeException ex)
             {

@@ -20,10 +20,10 @@ namespace EcpSigner.Infrastructure.Decorators
             _logger = logger;
         }
 
-        public async Task Login(string login, string password)
+        public async Task Login(string login, string password, CancellationToken cancellationToken)
         {
             _logger.Info("выполняем вход");
-            await _inner.Login(login, password);
+            await _inner.Login(login, password, cancellationToken);
             _logger.Info("вход выполнен");
         }
         public async Task<List<Document>> SearchDocuments(string startDate, string endDate, CancellationToken token)
@@ -36,30 +36,30 @@ namespace EcpSigner.Infrastructure.Decorators
             _logger.Info($"получено документов {docs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return docs;
         }
-        public async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
-            await _inner.CheckBeforeSign(doc, ecpCert, docName);
+            await _inner.CheckBeforeSign(doc, ecpCert, docName, cancellationToken);
             _logger.Debug(string.Format("проверка перед подписанием документа {0} прошла успешно", docName));
         }
-        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
-            (string docBase64, string hashBase64) = await _inner.GetSignData(doc, ecpCert, docName);
+            (string docBase64, string hashBase64) = await _inner.GetSignData(doc, ecpCert, docName, cancellationToken);
             _logger.Debug(string.Format("получение документа для подписания {0} прошло успешно", docName));
             return (docBase64, hashBase64);
         }
-        public async Task<List<EcpCertificate>> LoadEcpCertificates()
+        public async Task<List<EcpCertificate>> LoadEcpCertificates(CancellationToken cancellationToken)
         {
             _logger.Debug("загружаем список сертификатов ЕЦП");
             DateTime startTime = DateTime.UtcNow;
-            List<EcpCertificate> certs = await _inner.LoadEcpCertificates();
+            List<EcpCertificate> certs = await _inner.LoadEcpCertificates(cancellationToken);
             DateTime stopTime = DateTime.UtcNow;
             var elapsedTime = stopTime - startTime;
             _logger.Debug($"загружено сертификатов ЕЦП {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return certs;
         }
-        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
+        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
-            await _inner.SaveSignature(doc, hashBase64, signature, ecpCert, docName);
+            await _inner.SaveSignature(doc, hashBase64, signature, ecpCert, docName, cancellationToken);
             _logger.Debug(string.Format("подпись документа {0} сохранена на сервере", docName));
         }
     }

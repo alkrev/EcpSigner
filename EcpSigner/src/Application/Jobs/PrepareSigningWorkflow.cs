@@ -63,7 +63,7 @@ namespace DocumentSigner.Application.Jobs
                 ShowIgnoredDocuments(docs);
                 FlashWindowIfThereAreIgnoredDocuments(docs);
                 var filteredDocs = FilterDocuments(docs);
-                var certs = await GetCertificatesWithTime();
+                var certs = await GetCertificatesWithTime(cancellationToken);
                 await SignDocumentsLoop(filteredDocs, certs, cancellationToken);
                 LoggerFlush();
             }
@@ -83,11 +83,11 @@ namespace DocumentSigner.Application.Jobs
         /// <summary>
         /// Получаем подходящие для подписи сертификаты c замеров времени
         /// </summary>
-        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificatesWithTime()
+        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificatesWithTime(CancellationToken cancellationToken)
         {
             _logger.Info("получаем список сертификатов");
             DateTime startTime = DateTime.UtcNow;
-            var certs = await GetCertificates();
+            var certs = await GetCertificates(cancellationToken);
             DateTime stopTime = DateTime.UtcNow;
             var elapsedTime = stopTime - startTime;
             _logger.Info($"получено сертификатов {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
@@ -96,9 +96,9 @@ namespace DocumentSigner.Application.Jobs
         /// <summary>
         /// Получаем подходящие для подписи сертификаты
         /// </summary>
-        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificates()
+        private async Task<List<(EcpCertificate, ICertificate)>> GetCertificates(CancellationToken cancellationToken)
         {
-            var ecpCerts = await LoadEcpCertificates();
+            var ecpCerts = await LoadEcpCertificates(cancellationToken);
             var userCerts = GetUserCertificates();
             var matchedCerts = GetMatchedCertificates(ecpCerts, userCerts);
             var suitableCerts = GetSuitableCertificates(matchedCerts);
@@ -162,9 +162,9 @@ namespace DocumentSigner.Application.Jobs
         /// <summary>
         /// Загружаем список сертификатов пользователя из ЕЦП
         /// </summary>
-        private async Task<List<EcpCertificate>> LoadEcpCertificates()
+        private async Task<List<EcpCertificate>> LoadEcpCertificates(CancellationToken cancellationToken)
         {
-            List<EcpCertificate> ecpCerts = await _repository.LoadEcpCertificates();
+            List<EcpCertificate> ecpCerts = await _repository.LoadEcpCertificates(cancellationToken);
             if (ecpCerts.Count == 0) throw new BreakWorkException("у пользователя ECP не обнаружены сертификаты");
             return ecpCerts;
         }
@@ -223,7 +223,7 @@ namespace DocumentSigner.Application.Jobs
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
             if (!isLoggedOn)
             {
-                await _repository.Login(_config.Get().login, _config.Get().password);
+                await _repository.Login(_config.Get().login, _config.Get().password, cancellationToken);
                 isLoggedOn = true;
             }
         }

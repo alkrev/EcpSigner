@@ -1,6 +1,7 @@
 ﻿using WebTools;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Portal
 {
@@ -14,7 +15,7 @@ namespace Portal
         /**
          * Выполняем вход
          */
-        public async Task<loginReply> Login(string login, string password)
+        public async Task<loginReply> Login(string login, string password, CancellationToken cancellationToken)
         {
             string url = $"?c=main&m=index&method=Logon&login={login}";
             string referer = "?c=portal&m=udp";
@@ -24,7 +25,7 @@ namespace Portal
                 { "swUserRegion", "" },
                 { "swUserDBType", "" },
             };
-            loginReply data = await wc.Post<loginReply>(url, parameters, referer);
+            loginReply data = await wc.Post<loginReply>(url, parameters, referer, cancellationToken);
             return data;
         }
     }

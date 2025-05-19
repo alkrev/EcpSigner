@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WebTools;
 
@@ -17,11 +18,11 @@ namespace EcpSigner.Infrastructure.WebClients
         {
             _wc = wc;
         }
-        public async Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer)
+        public async Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken)
         {
             try
             {
-                return await _wc.PostJson<T>(url, parameters, referer);
+                return await _wc.PostJson<T>(url, parameters, referer, cancellationToken);
             }
             catch { throw; }
         }
