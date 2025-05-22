@@ -85,7 +85,6 @@
     <Compile Include="src\Infrastructure\AppTitleService.cs" />
     <Compile Include="src\Infrastructure\Cache.cs" />
     <Compile Include="src\Infrastructure\Configuration\JsonConfigurationProvider.cs" />
-    <Compile Include="src\Infrastructure\ConsoleControlService.cs" />
     <Compile Include="src\Infrastructure\ConsoleCtrlCCancellationService.cs" />
     <Compile Include="src\Infrastructure\DatesService.cs" />
     <Compile Include="src\Infrastructure\Decorators\PortalServiceDecorator.cs" />

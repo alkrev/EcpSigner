@@ -10,7 +10,7 @@ namespace ThreadingTools
     public static class DelayTools
     {
         /// <summary>
-        /// Задержка без генерации исключения
+        /// Подавляем генерацию исключения
         /// </summary>
         public static async Task Delay(TimeSpan ts, CancellationToken cancellationToken)
         {
