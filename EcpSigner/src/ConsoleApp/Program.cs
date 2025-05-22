@@ -48,7 +48,6 @@ namespace EcpSigner
                 // Название программы
                 var appTitleService = new AppTitleService(logger);
                 // Источник остановки работы
-                //ccs = new ConsoleControlService();
                 var ccs = new ConsoleCtrlCCancellationService();
                 ccs.StartListening();
                 var source = ccs.GetCancellationTokenSource();
