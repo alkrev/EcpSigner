@@ -1,13 +1,10 @@
 ﻿using DocumentSigner.Application.Jobs;
 using EcpSigner.Application.Decorators;
-using EcpSigner.Application.Interfaces;
 using EcpSigner.Application.Jobs;
-using EcpSigner.Domain.Interfaces;
-using EcpSigner.Domain.Models;
-using EcpSigner.Infrastructure;
 using EcpSigner.Infrastructure.Configuration;
 using EcpSigner.Infrastructure.Decorators;
 using EcpSigner.Infrastructure.Repositories;
+using EcpSigner.Infrastructure.Services;
 using EcpSigner.Infrastructure.WebClients;
 using EcpSigner.Infrastructure.Workers;
 using NLog;

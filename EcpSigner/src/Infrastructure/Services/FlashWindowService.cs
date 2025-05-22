@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsTools;
 
-namespace EcpSigner.Infrastructure
+namespace EcpSigner.Infrastructure.Services
 {
     class FlashWindowService : IFlashWindowService
     {

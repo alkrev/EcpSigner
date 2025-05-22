@@ -1,7 +1,7 @@
 ﻿using EcpSigner.Domain.Interfaces;
 using System;
 
-namespace EcpSigner.Infrastructure
+namespace EcpSigner.Infrastructure.Services
 {
     public class AppTitleService : IAppTitleService
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EcpSigner.Infrastructure
+namespace EcpSigner.Infrastructure.Services
 {
     public class DatesService : IDatesService
     {
