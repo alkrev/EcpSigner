@@ -30,7 +30,7 @@ namespace EcpSigner.Infrastructure.Workers
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     await _job.RunAsync(cancellationToken);
-                    await Application.Tools.DelayTools.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), cancellationToken);
+                    await ThreadingTools.DelayTools.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), cancellationToken);
                 }
             }
             catch (Exception ex)

@@ -1,6 +1,5 @@
 ﻿using CAPICOM;
 using EcpSigner.Application.Interfaces;
-using EcpSigner.Application.Tools;
 using EcpSigner.Domain.Exceptions;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
@@ -55,7 +54,7 @@ namespace EcpSigner.Application.Jobs
                     _logger.Error($"SignDocumentsLoop: {document}: {ex.Message ?? "ошибка"}");
                     break;
                 }
-                await DelayTools.Delay(TimeSpan.FromSeconds(_config.Get().signingIntervalSeconds), cancellationToken);
+                await ThreadingTools.DelayTools.Delay(TimeSpan.FromSeconds(_config.Get().signingIntervalSeconds), cancellationToken);
             }
             return (count, errorDocNums);
         }

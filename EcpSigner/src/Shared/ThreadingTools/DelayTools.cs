@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EcpSigner.Application.Tools
+namespace ThreadingTools
 {
     public static class DelayTools
     {
