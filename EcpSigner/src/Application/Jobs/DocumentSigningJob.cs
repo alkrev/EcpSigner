@@ -34,7 +34,7 @@ namespace DocumentSigner.Application.Jobs
             }
             catch (BreakWorkException ex)
             {
-                string m = $"{ex.Message ?? "DocumentSigningJob: фатальная ошибка"}";
+                string m = $"DocumentSigningJob: {ex.Message ?? "фатальная ошибка"}";
                 _logger.Fatal(m);
                 throw new Exception(m);
             }
@@ -42,7 +42,6 @@ namespace DocumentSigner.Application.Jobs
             {
                 string m = "остановка работы";
                 _logger.Info(m);
-                throw new Exception(m);
             }
             catch (IsNotLoggedInException)
             {
@@ -52,9 +51,15 @@ namespace DocumentSigner.Application.Jobs
             {
                 _logger.Debug(ex.Message);
             }
+            catch (ContinueExceptionWithError ex)
+            {
+                _logger.Error($"DocumentSigningJob: {ex.Message ?? "ошибка"}");
+            }
             catch (Exception ex)
             {
-                _logger.Error($"{ex.Message ?? "DocumentSigningJob: необработанная ошибка"}");
+                _logger.Error($"DocumentSigningJob: {ex.Message ?? "необработанная ошибка"}");
+                _logger.Debug($"DocumentSigningJob: {ex.GetType().Name}");
+                _logger.Debug($"DocumentSigningJob: {ex.StackTrace}");
             }
         }
     }

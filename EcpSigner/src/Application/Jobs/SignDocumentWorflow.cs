@@ -44,7 +44,7 @@ namespace EcpSigner.Application.Jobs
         private async Task SaveSignature(Document doc, EcpCertificate ecpCert, string signature, string hashBase64, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            await _repository.SaveSignature(doc, hashBase64, signature, ecpCert, docName, cancellationToken);
+            await _repository.SaveSignature(doc, hashBase64, signature, ecpCert, docName);
         }
         /// <summary>
         /// Вычисляем подпись
@@ -61,7 +61,7 @@ namespace EcpSigner.Application.Jobs
         private async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            (string docBase64, string hashBase64) = await _repository.GetSignData(doc, ecpCert, docName, cancellationToken);
+            (string docBase64, string hashBase64) = await _repository.GetSignData(doc, ecpCert, docName);
             return (docBase64, hashBase64);
         }
         /// <summary>
@@ -75,6 +75,7 @@ namespace EcpSigner.Application.Jobs
             {
                 if (now + TimeSpan.FromSeconds(1) < cert.Item2.ValidToDate)
                 {
+                    _logger.Debug(string.Format("сертификат выбран: {0} срок действия {1}", cert.Item2.SubjectName, cert.Item2.ValidToDate.ToString("dd.MM.yyyy HH:mm:ss")));
                     return (cert.Item1, cert.Item2);
                 }
                 else
@@ -90,7 +91,7 @@ namespace EcpSigner.Application.Jobs
         private async Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            await _repository.CheckBeforeSign(doc, ecpCert, docName, cancellationToken);
+            await _repository.CheckBeforeSign(doc, ecpCert, docName);
         }
     }
 }

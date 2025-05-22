@@ -27,7 +27,6 @@ namespace EcpSigner
         static void Main(string[] args)
         {
             var logger = new NLogLogger(LogManager.GetLogger("EcpSigner"));
-            IConsoleControlService ccs = null;
             try
             {
                 // Собираем DI
@@ -47,23 +46,22 @@ namespace EcpSigner
                 var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoopDecorator);
                 var documentSigningJob = new DocumentSigningJob(prepareSigningWorkflow, logger);
                 // Название программы
-                new AppTitleService(logger).Set();
+                var appTitleService = new AppTitleService(logger);
                 // Источник остановки работы
-                ccs = new ConsoleControlService();
-                //ccs = new ConsoleCtrlCCancellationService();
+                //ccs = new ConsoleControlService();
+                var ccs = new ConsoleCtrlCCancellationService();
                 ccs.StartListening();
                 var source = ccs.GetCancellationTokenSource();
                 // Запуск
-                var worker = new DocumentSigningWorker(documentSigningJob, logger, config);
+                var worker = new DocumentSigningWorker(documentSigningJob, logger, config, appTitleService);
                 Task.Run(async () => await worker.Run(source.Token)).Wait();
             }
             catch (Exception ex)
             {
-                logger.Error($"необработанне исключение: {ex.Message??""}");
+                logger.Fatal($"Main: {ex.Message ?? "фатальная ошибка"}");
             }
             finally
             {
-                ccs?.Dispose();
                 LogManager.Shutdown();
             }
         }

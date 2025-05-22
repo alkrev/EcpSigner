@@ -9,6 +9,6 @@ namespace Portal
 {
     public interface IMain
     {
-        Task<loginReply> Login(string login, string password, CancellationToken cancellationToken);
+        Task<loginReply> Login(string login, string password);
     }
 }

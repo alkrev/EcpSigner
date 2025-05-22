@@ -9,6 +9,6 @@ namespace Portal
 {
     public interface IWebClient
     {
-        Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken);
+        Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer);
     }
 }

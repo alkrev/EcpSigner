@@ -22,7 +22,7 @@ namespace EcpSigner.Infrastructure
         /// <summary>
         /// Название программы с версией
         /// </summary>
-        private string GetAppTitle()
+        public string GetAppTitle()
         {
             string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name.ToString();
             string ver = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();

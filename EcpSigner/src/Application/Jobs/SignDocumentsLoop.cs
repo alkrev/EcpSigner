@@ -1,5 +1,6 @@
 ﻿using CAPICOM;
 using EcpSigner.Application.Interfaces;
+using EcpSigner.Application.Tools;
 using EcpSigner.Domain.Exceptions;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
@@ -29,6 +30,7 @@ namespace EcpSigner.Application.Jobs
             List<string> errorDocNums = new List<string>();
             foreach (Document doc in docs)
             {
+                if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
                 string document = string.Format("'{0} - {1} ({2})'", doc.Name, doc.Num, doc.VersionNumber);
                 try
                 {
@@ -50,17 +52,10 @@ namespace EcpSigner.Application.Jobs
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"{document}: {ex.Message ?? "SignDocumentsLoop: ошибка"}");
+                    _logger.Error($"SignDocumentsLoop: {document}: {ex.Message ?? "ошибка"}");
                     break;
                 }
-                for (int i = 0; i < _config.Get().signingIntervalSeconds; i++)
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        break;
-                    }
-                    await Task.Delay(1 * 1000);
-                }
+                await DelayTools.Delay(TimeSpan.FromSeconds(_config.Get().signingIntervalSeconds), cancellationToken);
             }
             return (count, errorDocNums);
         }

@@ -1,4 +1,5 @@
-﻿using EcpSigner.Domain.Interfaces;
+﻿using EcpSigner.Domain.Exceptions;
+using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
 using Portal;
 using System;
@@ -18,13 +19,16 @@ namespace EcpSigner.Infrastructure.WebClients
         {
             _wc = wc;
         }
-        public async Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken)
+        public async Task<T> Post<T>(string url, Dictionary<string, string> parameters, string referer)
         {
             try
             {
-                return await _wc.PostJson<T>(url, parameters, referer, cancellationToken);
+                return await _wc.PostJson<T>(url, parameters, referer);
             }
-            catch { throw; }
+            catch (Exception ex) 
+            {
+                throw new ContinueExceptionWithError(ex.Message);
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace WebTools
             this.url = url;
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
-        public async Task<string> Post(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken)
+        public async Task<string> Post(string url, Dictionary<string, string> parameters, string referer)
         {
             string responseString;
             try
@@ -32,7 +32,7 @@ namespace WebTools
                 var requestMessage = new HttpRequestMessage(HttpMethod.Post, path);
                 requestMessage.Headers.Referrer = new Uri(re);
                 requestMessage.Content = new FormUrlEncodedContent(parameters);
-                var response = await client.SendAsync(requestMessage, cancellationToken);
+                var response = await client.SendAsync(requestMessage);
                 responseString = await response.Content.ReadAsStringAsync();
             }
             catch (HttpRequestException e)
@@ -66,10 +66,10 @@ namespace WebTools
             }
             return res;
         }
-        public async Task<T> PostJson<T>(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken)
+        public async Task<T> PostJson<T>(string url, Dictionary<string, string> parameters, string referer)
         {
             T res;
-            string responseString = await Post(url, parameters, referer, cancellationToken);
+            string responseString = await Post(url, parameters, referer);
             res = JsonDeserialize<T>(responseString);
             return res;
         }

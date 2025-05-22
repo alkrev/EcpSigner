@@ -9,6 +9,6 @@ namespace WebTools
 {
     public interface IClient
     {
-        Task<T> PostJson<T>(string url, Dictionary<string, string> parameters, string referer, CancellationToken cancellationToken);
+        Task<T> PostJson<T>(string url, Dictionary<string, string> parameters, string referer);
     }
 }

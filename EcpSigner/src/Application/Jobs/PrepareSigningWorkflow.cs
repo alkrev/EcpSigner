@@ -164,7 +164,7 @@ namespace DocumentSigner.Application.Jobs
         /// </summary>
         private async Task<List<EcpCertificate>> LoadEcpCertificates(CancellationToken cancellationToken)
         {
-            List<EcpCertificate> ecpCerts = await _repository.LoadEcpCertificates(cancellationToken);
+            List<EcpCertificate> ecpCerts = await _repository.LoadEcpCertificates();
             if (ecpCerts.Count == 0) throw new BreakWorkException("у пользователя ECP не обнаружены сертификаты");
             return ecpCerts;
         }
@@ -223,7 +223,7 @@ namespace DocumentSigner.Application.Jobs
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
             if (!isLoggedOn)
             {
-                await _repository.Login(_config.Get().login, _config.Get().password, cancellationToken);
+                await _repository.Login(_config.Get().login, _config.Get().password);
                 isLoggedOn = true;
             }
         }

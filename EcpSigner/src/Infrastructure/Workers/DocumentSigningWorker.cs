@@ -11,23 +11,26 @@ namespace EcpSigner.Infrastructure.Workers
         private readonly IJob _job;
         private readonly ILogger _logger;
         private readonly IConfigurationProvider _config;
-        public DocumentSigningWorker(IJob job, ILogger logger, IConfigurationProvider config)
+        private readonly IAppTitleService _appTitleService;
+        public DocumentSigningWorker(IJob job, ILogger logger, IConfigurationProvider config, IAppTitleService appTitleService)
         {
             _job = job;
             _logger = logger;
             _config = config;
+            _appTitleService = appTitleService;
         }
         /// <summary>
         /// Основной цикл работы
         /// </summary>
-        public async Task Run(CancellationToken stoppingToken)
+        public async Task Run(CancellationToken cancellationToken)
         {
             try
             {
-                while (!stoppingToken.IsCancellationRequested)
+                _appTitleService.Set();
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    await _job.RunAsync(stoppingToken);
-                    await Task.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), stoppingToken); // интервал между задачами
+                    await _job.RunAsync(cancellationToken);
+                    await Application.Tools.DelayTools.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), cancellationToken);
                 }
             }
             catch (Exception ex)

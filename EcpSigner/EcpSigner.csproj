@@ -65,6 +65,7 @@
     <Compile Include="src\Application\Jobs\SignDocumentsLoop.cs" />
     <Compile Include="src\Application\Jobs\SignDocumentWorflow.cs" />
     <Compile Include="src\Application\Jobs\PrepareSigningWorkflow.cs" />
+    <Compile Include="src\Application\Tools\Delay.cs" />
     <Compile Include="src\Domain\Exceptions\DocumentSigning.cs" />
     <Compile Include="src\Application\Interfaces\IJob.cs" />
     <Compile Include="src\Application\Jobs\DocumentSigningJob.cs" />
