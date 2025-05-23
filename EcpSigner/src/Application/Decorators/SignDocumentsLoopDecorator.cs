@@ -16,7 +16,7 @@ namespace EcpSigner.Application.Decorators
         private readonly ISignDocumentsLoop _inner;
         private readonly ILogger _logger;
         private readonly ICache _cache;
-        public SignDocumentsLoopDecorator(ISignDocumentsLoop inner, ICache cache, ILogger logger)
+        public SignDocumentsLoopDecorator(ISignDocumentsLoop inner, ICache cache, ILogger logger, IDelayProvider delayProvider)
         {
             _logger = logger;
             _inner = inner;

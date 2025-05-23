@@ -17,11 +17,13 @@ namespace EcpSigner.Application.Jobs
         private readonly ILogger _logger;
         private readonly ISignDocumentWorflow _signDocumentsWorflow;
         private readonly IConfigurationProvider _config;
-        public SignDocumentsLoop(ILogger logger, IConfigurationProvider config, ISignDocumentWorflow signDocumentsWorflow)
+        private readonly IDelayProvider _delayProvider;
+        public SignDocumentsLoop(ILogger logger, IConfigurationProvider config, ISignDocumentWorflow signDocumentsWorflow, IDelayProvider delayProvider)
         {
             _logger = logger;
             _signDocumentsWorflow = signDocumentsWorflow;
             _config = config;
+            _delayProvider = delayProvider;
         }
         public async Task<(int signedCount, List<string> docsToCache)> RunAsync(List<Document> docs, List<(EcpCertificate, ICertificate)> certs, CancellationToken cancellationToken)
         {
@@ -54,7 +56,7 @@ namespace EcpSigner.Application.Jobs
                     _logger.Error($"SignDocumentsLoop: {document}: {ex.Message ?? "ошибка"}");
                     break;
                 }
-                await ThreadingTools.DelayTools.Delay(TimeSpan.FromSeconds(_config.Get().signingIntervalSeconds), cancellationToken);
+                await _delayProvider.DelayAsync(TimeSpan.FromSeconds(_config.Get().pauseMinutes), cancellationToken);
             }
             return (count, errorDocNums);
         }

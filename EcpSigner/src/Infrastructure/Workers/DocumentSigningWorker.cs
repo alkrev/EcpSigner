@@ -12,12 +12,14 @@ namespace EcpSigner.Infrastructure.Workers
         private readonly ILogger _logger;
         private readonly IConfigurationProvider _config;
         private readonly IAppTitleService _appTitleService;
-        public DocumentSigningWorker(IJob job, ILogger logger, IConfigurationProvider config, IAppTitleService appTitleService)
+        private readonly IDelayProvider _delayProvider;
+        public DocumentSigningWorker(IJob job, ILogger logger, IConfigurationProvider config, IAppTitleService appTitleService, IDelayProvider delayProvider)
         {
             _job = job;
             _logger = logger;
             _config = config;
             _appTitleService = appTitleService;
+            _delayProvider = delayProvider;
         }
         /// <summary>
         /// Основной цикл работы
@@ -30,7 +32,7 @@ namespace EcpSigner.Infrastructure.Workers
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     await _job.RunAsync(cancellationToken);
-                    await ThreadingTools.DelayTools.Delay(TimeSpan.FromMinutes(_config.Get().pauseMinutes), cancellationToken);
+                    await _delayProvider.DelayAsync(TimeSpan.FromSeconds(_config.Get().pauseMinutes), cancellationToken);
                 }
             }
             catch (Exception ex)

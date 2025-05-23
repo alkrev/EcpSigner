@@ -60,12 +60,12 @@
   <ItemGroup>
     <Compile Include="src\Application\Decorators\SignDocumentsLoopDecorator.cs" />
     <Compile Include="src\Application\Filters\DocumentFilters.cs" />
+    <Compile Include="src\Application\Interfaces\IDelayProvider.cs" />
     <Compile Include="src\Application\Interfaces\ISignDocumentsLoop.cs" />
     <Compile Include="src\Application\Interfaces\ISignDocumentWorflow.cs" />
     <Compile Include="src\Application\Jobs\SignDocumentsLoop.cs" />
     <Compile Include="src\Application\Jobs\SignDocumentWorflow.cs" />
     <Compile Include="src\Application\Jobs\PrepareSigningWorkflow.cs" />
-    <Compile Include="src\Shared\ThreadingTools\DelayTools.cs" />
     <Compile Include="src\Domain\Exceptions\DocumentSigning.cs" />
     <Compile Include="src\Application\Interfaces\IJob.cs" />
     <Compile Include="src\Application\Jobs\DocumentSigningJob.cs" />
@@ -89,6 +89,7 @@
     <Compile Include="src\Infrastructure\Services\DatesService.cs" />
     <Compile Include="src\Infrastructure\Decorators\PortalServiceDecorator.cs" />
     <Compile Include="src\Infrastructure\Decorators\SignatureServiceDecorator.cs" />
+    <Compile Include="src\Infrastructure\Services\DelayProvider.cs" />
     <Compile Include="src\Infrastructure\Services\FlashWindowService.cs" />
     <Compile Include="src\Infrastructure\Services\NLogLogger.cs" />
     <Compile Include="src\Infrastructure\Repositories\SignatureService.cs" />

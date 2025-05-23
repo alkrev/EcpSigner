@@ -37,9 +37,10 @@ namespace EcpSigner
                 var cache = new Cache(new CacheTools.Cache(config.Get().cacheMinutes));
                 var dates = new DatesService(args);
                 var flashWindowService = new FlashWindowService(new FlashWindow(Process.GetCurrentProcess().MainWindowHandle));
+                var delayProvider = new DelayProvider();
                 // Бизнес-логика (приложение)
                 var signDocumentWorflow = new SignDocumentWorflow(portalServiceDecorator, signatureServiceDecorator, logger);
-                var signDocumentsLoopDecorator = new SignDocumentsLoopDecorator(new SignDocumentsLoop(logger, config, signDocumentWorflow), cache, logger);
+                var signDocumentsLoopDecorator = new SignDocumentsLoopDecorator(new SignDocumentsLoop(logger, config, signDocumentWorflow, delayProvider), cache, logger, delayProvider);
                 var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoopDecorator);
                 var documentSigningJob = new DocumentSigningJob(prepareSigningWorkflow, logger);
                 // Название программы
@@ -49,7 +50,7 @@ namespace EcpSigner
                 ccs.StartListening();
                 var source = ccs.GetCancellationTokenSource();
                 // Запуск
-                var worker = new DocumentSigningWorker(documentSigningJob, logger, config, appTitleService);
+                var worker = new DocumentSigningWorker(documentSigningJob, logger, config, appTitleService, delayProvider);
                 Task.Run(async () => await worker.Run(source.Token)).Wait();
             }
             catch (Exception ex)
