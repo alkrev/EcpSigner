@@ -36,6 +36,7 @@ namespace EcpSigner.Application.Jobs
                 {
                     await _signDocumentsWorflow.RunAsync(doc, certs, cancellationToken);
                     count++;
+                    await _delayProvider.DelayAsync(TimeSpan.FromSeconds(_config.Get().signingIntervalSeconds), cancellationToken);
                 }
                 catch (DocumentSigningException ex)
                 {
@@ -55,7 +56,6 @@ namespace EcpSigner.Application.Jobs
                     _logger.Error($"SignDocumentsLoop: {document}: {ex.Message ?? "ошибка"}");
                     break;
                 }
-                await _delayProvider.DelayAsync(TimeSpan.FromSeconds(_config.Get().pauseMinutes), cancellationToken);
             }
             return (count, errorDocNums);
         }

@@ -32,7 +32,7 @@ namespace EcpSigner.Infrastructure.Workers
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     await _job.RunAsync(cancellationToken);
-                    await _delayProvider.DelayAsync(TimeSpan.FromSeconds(_config.Get().pauseMinutes), cancellationToken);
+                    await _delayProvider.DelayAsync(TimeSpan.FromMinutes(_config.Get().pauseMinutes), cancellationToken);
                 }
             }
             catch (Exception ex)
