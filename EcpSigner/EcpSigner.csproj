@@ -13,6 +13,21 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,14 +52,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.3.4\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Security" />
@@ -58,63 +69,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Application\Decorators\SignDocumentsLoopDecorator.cs" />
-    <Compile Include="src\Application\Filters\DocumentFilters.cs" />
-    <Compile Include="src\Application\Interfaces\IDelayProvider.cs" />
-    <Compile Include="src\Application\Interfaces\ISignDocumentsLoop.cs" />
-    <Compile Include="src\Application\Interfaces\ISignDocumentWorflow.cs" />
-    <Compile Include="src\Application\Jobs\SignDocumentsLoop.cs" />
-    <Compile Include="src\Application\Jobs\SignDocumentWorflow.cs" />
-    <Compile Include="src\Application\Jobs\PrepareSigningWorkflow.cs" />
-    <Compile Include="src\Domain\Exceptions\DocumentSigning.cs" />
-    <Compile Include="src\Application\Interfaces\IJob.cs" />
-    <Compile Include="src\Application\Jobs\DocumentSigningJob.cs" />
-    <Compile Include="src\Domain\Interfaces\IAppTitleService.cs" />
-    <Compile Include="src\Domain\Interfaces\ICache.cs" />
-    <Compile Include="src\Domain\Interfaces\IConfigurationProvider.cs" />
-    <Compile Include="src\Domain\Interfaces\IConsoleControlService.cs" />
-    <Compile Include="src\Domain\Interfaces\IDatesService.cs" />
-    <Compile Include="src\Domain\Interfaces\IFlashWindowService.cs" />
-    <Compile Include="src\Domain\Interfaces\ILogger.cs" />
-    <Compile Include="src\Domain\Interfaces\IPortalService.cs" />
-    <Compile Include="src\Domain\Interfaces\ISignatureService.cs" />
-    <Compile Include="src\Domain\Interfaces\IWorkerService.cs" />
-    <Compile Include="src\Domain\Models\Document.cs" />
-    <Compile Include="src\Domain\Models\AppSettings.cs" />
-    <Compile Include="src\Domain\Models\EcpCertificate.cs" />
-    <Compile Include="src\Infrastructure\Services\AppTitleService.cs" />
-    <Compile Include="src\Infrastructure\Services\Cache.cs" />
-    <Compile Include="src\Infrastructure\Configuration\JsonConfigurationProvider.cs" />
-    <Compile Include="src\Infrastructure\Services\ConsoleCtrlCCancellationService.cs" />
-    <Compile Include="src\Infrastructure\Services\DatesService.cs" />
-    <Compile Include="src\Infrastructure\Decorators\PortalServiceDecorator.cs" />
-    <Compile Include="src\Infrastructure\Decorators\SignatureServiceDecorator.cs" />
-    <Compile Include="src\Infrastructure\Services\DelayProvider.cs" />
-    <Compile Include="src\Infrastructure\Services\FlashWindowService.cs" />
-    <Compile Include="src\Infrastructure\Services\NLogLogger.cs" />
-    <Compile Include="src\Infrastructure\Repositories\SignatureService.cs" />
-    <Compile Include="src\Shared\cache\ICache.cs" />
-    <Compile Include="src\Shared\CryptographyTools\Store\CurrentUserStore.cs" />
-    <Compile Include="src\Shared\CryptographyTools\Signing\ISigning.cs" />
-    <Compile Include="src\Shared\CryptographyTools\Store\ICurrentUserStore.cs" />
-    <Compile Include="src\Shared\Portal\IEMD.cs" />
-    <Compile Include="src\Shared\Portal\IMain.cs" />
-    <Compile Include="src\Shared\WebTools\IClient.cs" />
-    <Compile Include="src\Infrastructure\WebClients\WebClient.cs" />
-    <Compile Include="src\Shared\cache\cache.cs" />
-    <Compile Include="src\Shared\CryptographyTools\Signing\CryptoPro\Crypto.cs" />
-    <Compile Include="src\Shared\Portal\IWebClient.cs" />
-    <Compile Include="src\Shared\WindowsTools\FlashWindow.cs" />
-    <Compile Include="src\Shared\Portal\exceptions.cs" />
-    <Compile Include="src\Shared\Portal\main.cs" />
-    <Compile Include="src\Shared\Portal\emd.cs" />
-    <Compile Include="src\Infrastructure\Repositories\PortalService.cs" />
-    <Compile Include="src\ConsoleApp\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Infrastructure\Configuration\Settings.cs" />
-    <Compile Include="src\Shared\WebTools\Client.cs" />
-    <Compile Include="src\Infrastructure\Workers\DocumentSigningWorker.cs" />
-    <Compile Include="src\Shared\WindowsTools\IFlashWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -127,36 +83,34 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="CAdESCOM">
-      <Guid>{E00B169C-AE7F-45D5-9C56-672E2B8942E0}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="CAPICOM">
-      <Guid>{BD26B198-EE42-4725-9B23-AFA912434229}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="CERTENROLLLib">
-      <Guid>{728AB348-217D-11DA-B2A4-000E7BBB2B09}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
+    <ProjectReference Include="..\EcpSigner.Application\EcpSigner.Application.csproj">
+      <Project>{690cf2d0-466c-4dc7-9e95-0f696c6b2db8}</Project>
+      <Name>EcpSigner.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EcpSigner.Domain\EcpSigner.Domain.csproj">
+      <Project>{58692a3d-c079-400f-b4d1-f93a362aa199}</Project>
+      <Name>EcpSigner.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EcpSigner.Infrastructure\EcpSigner.Infrastructure.csproj">
+      <Project>{5a57ff9a-0022-4554-8e0c-7a00ebb01390}</Project>
+      <Name>EcpSigner.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ecp\Ecp.csproj">
+      <Project>{dcbe9f36-0da1-4013-a970-96527a439593}</Project>
+      <Name>Ecp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="tests\Application.Tests\" />
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
