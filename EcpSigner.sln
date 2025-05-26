@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31829.152
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36121.58 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner", "EcpSigner\EcpSigner.csproj", "{932AAE98-CFB6-4E2C-8104-A9892B4EB297}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner.Infrastructure", "EcpSigner.Infrastructure\EcpSigner.Infrastructure.csproj", "{5A57FF9A-0022-4554-8E0C-7A00EBB01390}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecp", "Ecp\Ecp.csproj", "{DCBE9F36-0DA1-4013-A970-96527A439593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner.Application.Tests", "EcpSigner.Application.Tests\EcpSigner.Application.Tests.csproj", "{CE128B60-318E-4B5F-B1F5-CE71B9FE452E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{DCBE9F36-0DA1-4013-A970-96527A439593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCBE9F36-0DA1-4013-A970-96527A439593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCBE9F36-0DA1-4013-A970-96527A439593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{690CF2D0-466C-4DC7-9E95-0F696C6B2DB8} = {03C12601-E01E-42AF-9D3C-120FDFAD61E0}
 		{5A57FF9A-0022-4554-8E0C-7A00EBB01390} = {03C12601-E01E-42AF-9D3C-120FDFAD61E0}
 		{DCBE9F36-0DA1-4013-A970-96527A439593} = {03C12601-E01E-42AF-9D3C-120FDFAD61E0}
+		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E} = {27AB2953-D9DF-44D6-8BD7-4F52CDFB1FC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2593316-A784-4068-BB2F-85B3ABC3A299}
