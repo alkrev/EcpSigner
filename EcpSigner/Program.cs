@@ -42,10 +42,11 @@ namespace EcpSigner
                 var dates = new DatesService(args);
                 var flashWindowService = new FlashWindowService(new FlashWindow(Process.GetCurrentProcess().MainWindowHandle));
                 var delayProvider = new DelayProvider();
+                var dateTimeProvider = new DateTimeProvider();
                 // Бизнес-логика (приложение)
                 var signDocumentWorflow = new SignDocumentWorflow(portalServiceDecorator, signatureServiceDecorator, logger);
                 var signDocumentsLoopDecorator = new SignDocumentsLoopDecorator(new SignDocumentsLoop(logger, config, signDocumentWorflow, delayProvider), cache, logger, delayProvider);
-                var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoopDecorator);
+                var prepareSigningWorkflow = new PrepareSigningWorkflow(portalServiceDecorator, signatureServiceDecorator, logger, config, dates, cache, flashWindowService, signDocumentsLoopDecorator, dateTimeProvider);
                 var documentSigningJob = new DocumentSigningJob(prepareSigningWorkflow, logger);
                 // Название программы
                 var appTitleService = new AppTitleService(logger);
