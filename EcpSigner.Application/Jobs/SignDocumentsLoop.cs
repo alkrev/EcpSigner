@@ -40,7 +40,7 @@ namespace EcpSigner.Application.Jobs
                 }
                 catch (DocumentSigningException ex)
                 {
-                    _logger.Warn($"{document}: {ex.Message ?? "SignDocs: warning"}");
+                    _logger.Warn($"{document}: {ex.Message}");
                     errorDocNums.Add(doc.ID);
                 }
                 catch (IsNotLoggedInException)
@@ -53,7 +53,7 @@ namespace EcpSigner.Application.Jobs
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"SignDocumentsLoop: {document}: {ex.Message ?? "ошибка"}");
+                    _logger.Error($"SignDocumentsLoop: {document}: {ex.Message}");
                     break;
                 }
             }
