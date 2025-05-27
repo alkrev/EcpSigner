@@ -20,6 +20,7 @@ namespace EcpSigner.Application.Jobs
         private readonly ICacheService _cache;
         private readonly IFlashWindowService _flashWindowService;
         private readonly ISignDocumentsLoop _signDocumentsLoop;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         private bool isLoggedOn;
         private DateTime lastCheck;
@@ -32,7 +33,8 @@ namespace EcpSigner.Application.Jobs
             IDatesService dates,
             ICacheService cache,
             IFlashWindowService flashWindowService,
-            ISignDocumentsLoop signDocumentsLoop
+            ISignDocumentsLoop signDocumentsLoop,
+            IDateTimeProvider dateTimeProvider
         )
         {
             _repository = repository;
@@ -43,9 +45,10 @@ namespace EcpSigner.Application.Jobs
             _cache = cache;
             _flashWindowService = flashWindowService;
             _signDocumentsLoop = signDocumentsLoop;
+            _dateTimeProvider = dateTimeProvider;
 
             isLoggedOn = false;
-            lastCheck = DateTime.Now;
+            lastCheck = _dateTimeProvider.Now;
         }
         /// <summary>
         /// Подписываем документы
@@ -117,7 +120,7 @@ namespace EcpSigner.Application.Jobs
                     suitableCerts.Add(cert);
                 }
                 catch (Exception ex) {
-                    _logger.Debug($"GetSuitableCertificates: сертификат '{cert.Item2.Subject} срок действия {cert.Item2.ValidToDate:dd.MM.yyyy HH:mm:ss}': {ex.Message??"ошибка подписания"}"); 
+                    _logger.Debug($"GetSuitableCertificates: сертификат '{cert.Item2.Subject} срок действия {cert.Item2.ValidToDate:dd.MM.yyyy HH:mm:ss}': {ex.Message}"); 
                 }
             }
             if (suitableCerts.Count == 0)
@@ -233,7 +236,7 @@ namespace EcpSigner.Application.Jobs
         /// </summary>
         private void CacheRemoveExpired(ref DateTime lastCheck)
         {
-            DateTime now = DateTime.Now;
+            DateTime now = _dateTimeProvider.Now;
             if (lastCheck.Day != now.Day)
             {
                 _logger.Info("очищаем кеш");
