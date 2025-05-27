@@ -1,10 +1,7 @@
-﻿using EcpSigner.Application.Filters;
-using EcpSigner.Application.Interfaces;
+﻿using EcpSigner.Application.Interfaces;
 using EcpSigner.Domain.Exceptions;
 using EcpSigner.Domain.Interfaces;
-using EcpSigner.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
