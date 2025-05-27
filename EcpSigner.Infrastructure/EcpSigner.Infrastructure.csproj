@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\CertificateAdapter.cs" />
+    <Compile Include="Services\DateTimeProvider.cs" />
     <Compile Include="Shared\CachingTools\Cache.cs" />
     <Compile Include="Shared\CachingTools\ICache.cs" />
     <Compile Include="Configuration\JsonConfigurationProvider.cs" />
