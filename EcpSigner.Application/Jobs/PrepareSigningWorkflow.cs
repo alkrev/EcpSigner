@@ -116,11 +116,13 @@ namespace EcpSigner.Application.Jobs
                     _signatureService.Sign(cert.Item2, "test", "test");
                     suitableCerts.Add(cert);
                 }
-                catch { }
+                catch (Exception ex) {
+                    _logger.Debug($"GetSuitableCertificates: сертификат '{cert.Item2.Subject} срок действия {cert.Item2.ValidToDate:dd.MM.yyyy HH:mm:ss}': {ex.Message??"ошибка подписания"}"); 
+                }
             }
             if (suitableCerts.Count == 0)
             {
-                throw new BreakWorkException("У пользователя в операционной системе подходящие сертификаты не найдены");
+                throw new BreakWorkException("у пользователя в операционной системе подходящие сертификаты не найдены");
             }
             return suitableCerts;
         }
