@@ -77,6 +77,7 @@ namespace EcpSigner.Application.Jobs
 
             // Assert
             await act.Should().NotThrowAsync();
+            _cacheServiceMock.Verify(c => c.RemoveExpired(), Times.Once);
             _portalServiceMock.Verify(p => p.Login("user", "pass"), Times.Once);
             _portalServiceMock.Verify(p => p.SearchDocuments("2024-01-01", "2024-01-31", CancellationToken.None), Times.Once);
             _flashWindowServiceMock.Verify(f => f.Stop(), Times.Once);
