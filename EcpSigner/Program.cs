@@ -60,7 +60,7 @@ namespace EcpSigner
             }
             catch (Exception ex)
             {
-                logger.Fatal($"Main: {ex.Message ?? "фатальная ошибка"}");
+                logger.Fatal($"Main: {ex.Message}");
             }
             finally
             {
