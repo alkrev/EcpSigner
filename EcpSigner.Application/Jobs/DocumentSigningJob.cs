@@ -31,7 +31,7 @@ namespace EcpSigner.Application.Jobs
             }
             catch (BreakWorkException ex)
             {
-                string m = $"DocumentSigningJob: {ex.Message ?? "фатальная ошибка"}";
+                string m = $"DocumentSigningJob: {ex.Message}";
                 _logger.Fatal(m);
                 throw new Exception(m);
             }
@@ -50,11 +50,11 @@ namespace EcpSigner.Application.Jobs
             }
             catch (ContinueExceptionWithError ex)
             {
-                _logger.Error($"DocumentSigningJob: {ex.Message ?? "ошибка"}");
+                _logger.Error($"DocumentSigningJob: {ex.Message}");
             }
             catch (Exception ex)
             {
-                _logger.Error($"DocumentSigningJob: {ex.Message ?? "необработанная ошибка"}");
+                _logger.Error($"DocumentSigningJob: {ex.Message}");
                 _logger.Debug($"DocumentSigningJob: {ex.GetType().Name}");
                 _logger.Debug($"DocumentSigningJob: {ex.StackTrace}");
             }
