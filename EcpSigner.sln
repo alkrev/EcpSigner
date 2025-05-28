@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner.Application.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner.Domain.Tests", "EcpSigner.Domain.Tests\EcpSigner.Domain.Tests.csproj", "{D032374E-1E36-4D4F-9049-75917305F199}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcpSigner.Infrastructure.Tests", "EcpSigner.Infrastructure.Tests\EcpSigner.Infrastructure.Tests.csproj", "{813B1269-B697-4D0C-8D2D-65EDE8AA8723}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{D032374E-1E36-4D4F-9049-75917305F199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D032374E-1E36-4D4F-9049-75917305F199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D032374E-1E36-4D4F-9049-75917305F199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{813B1269-B697-4D0C-8D2D-65EDE8AA8723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{813B1269-B697-4D0C-8D2D-65EDE8AA8723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{813B1269-B697-4D0C-8D2D-65EDE8AA8723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{813B1269-B697-4D0C-8D2D-65EDE8AA8723}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{DCBE9F36-0DA1-4013-A970-96527A439593} = {03C12601-E01E-42AF-9D3C-120FDFAD61E0}
 		{CE128B60-318E-4B5F-B1F5-CE71B9FE452E} = {27AB2953-D9DF-44D6-8BD7-4F52CDFB1FC4}
 		{D032374E-1E36-4D4F-9049-75917305F199} = {27AB2953-D9DF-44D6-8BD7-4F52CDFB1FC4}
+		{813B1269-B697-4D0C-8D2D-65EDE8AA8723} = {27AB2953-D9DF-44D6-8BD7-4F52CDFB1FC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2593316-A784-4068-BB2F-85B3ABC3A299}
