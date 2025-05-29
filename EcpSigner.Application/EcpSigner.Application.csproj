@@ -47,6 +47,7 @@
     <Compile Include="Interfaces\IJob.cs" />
     <Compile Include="Interfaces\ISignDocumentsLoop.cs" />
     <Compile Include="Interfaces\ISignDocumentWorflow.cs" />
+    <Compile Include="Interfaces\IWorkerFactory.cs" />
     <Compile Include="Jobs\DocumentSigningJob.cs" />
     <Compile Include="Jobs\PrepareSigningWorkflow.cs" />
     <Compile Include="Jobs\SignDocumentsLoop.cs" />

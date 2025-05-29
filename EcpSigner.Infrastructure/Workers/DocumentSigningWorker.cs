@@ -6,7 +6,7 @@ using EcpSigner.Application.Interfaces;
 
 namespace EcpSigner.Infrastructure.Workers
 {
-    public class DocumentSigningWorker
+    public class DocumentSigningWorker: IJob
     {
         private readonly IJob _job;
         private readonly ILogger _logger;
@@ -24,7 +24,7 @@ namespace EcpSigner.Infrastructure.Workers
         /// <summary>
         /// Основной цикл работы
         /// </summary>
-        public async Task Run(CancellationToken cancellationToken)
+        public async Task RunAsync(CancellationToken cancellationToken)
         {
             try
             {
