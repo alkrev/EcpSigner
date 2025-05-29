@@ -53,7 +53,6 @@
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IPortalService.cs" />
     <Compile Include="Interfaces\ISignatureService.cs" />
-    <Compile Include="Interfaces\IWorkerService.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\EcpCertificate.cs" />
