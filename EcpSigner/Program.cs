@@ -1,36 +1,35 @@
 ﻿using EcpSigner.Infrastructure.Factories;
 using EcpSigner.Infrastructure.Services;
-using NLog;
 using System;
-using System.Threading.Tasks;
+
 namespace EcpSigner
 {
-    class Program
+    public class Program
     {
         /// <summary>
         /// Точка входа
         /// </summary>
         public static void Main(string[] args)
         {
-            var configPath = "config.json";
-            Run(args, configPath);
+            Run(args);
         }
-        public static void Run(string[] args, string configPath)
+        public static void Run(string[] args, IProgramRunner runner = null)
         {
-            var logger = new NLogLogger(LogManager.GetLogger("EcpSigner"));
+            var configPath = "config.json";
+            var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
             try
             {
-                var workerFactory = new DefaultWorkerFactory(logger, configPath);
-                var runner = new ProgramRunner(logger, workerFactory);
-                Task.Run(() => runner.RunAsync(args)).Wait();
+                var factory = new DefaultWorkerFactory(logger, configPath);
+                runner = runner ?? new ProgramRunner(logger, factory);
+                runner.RunAsync(args).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                logger.Fatal($"Main: {ex.Message}");
+                logger.Fatal($"Program.Run: {ex.Message}");
             }
             finally
             {
-                LogManager.Shutdown();
+                NLog.LogManager.Shutdown();
             }
         }
     }
