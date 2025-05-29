@@ -29,6 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\EcpSigner.Application\EcpSigner.Application.csproj" />
     <ProjectReference Include="..\EcpSigner.Domain\EcpSigner.Domain.csproj" />
+    <ProjectReference Include="..\EcpSigner.Infrastructure\EcpSigner.Infrastructure.csproj" />
+    <ProjectReference Include="..\EcpSigner\EcpSigner.csproj" />
   </ItemGroup>
 
   <ItemGroup>
