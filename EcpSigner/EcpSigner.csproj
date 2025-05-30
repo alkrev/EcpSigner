@@ -92,6 +92,7 @@
     <Compile Include="IProgramRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramRunner.cs" />
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,6 @@
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Infrastructure.Services;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace EcpSigner
