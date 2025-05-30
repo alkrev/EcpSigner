@@ -8,7 +8,7 @@ using EcpSigner.Domain.Interfaces;
 
 namespace EcpSigner
 {
-    public class ProgramTests
+    public class BootstrapperTests
     {
         [Fact]
         public void Run_ShouldCallRunner_WhenRunnerIsProvided()
@@ -19,7 +19,7 @@ namespace EcpSigner
             runnerMock.Setup(r => r.RunAsync(args)).Returns(Task.CompletedTask);
 
             // Act
-            Program.Run(args, runnerMock.Object);
+            new Bootstrapper().Run(args, runnerMock.Object);
 
             // Assert
             runnerMock.Verify(r => r.RunAsync(args), Times.Once);
@@ -35,7 +35,7 @@ namespace EcpSigner
                       .ThrowsAsync(new Exception("Simulated failure"));
 
             // Act
-            Action act = () => Program.Run(args, runnerMock.Object);
+            Action act = () => new Bootstrapper().Run(args, runnerMock.Object);
 
             // Assert
             act.Should().NotThrow(); // исключение должно быть перехвачено в Program.Run
