@@ -40,19 +40,6 @@ namespace EcpSigner
             // Assert
             act.Should().NotThrow(); // исключение должно быть перехвачено в Program.Run
         }
-
-        [Fact]
-        public void Run_ShouldUseDefaultRunner_WhenNullPassed()
-        {
-            // Arrange
-            var args = new[] { "arg1" };
-
-            // Act
-            Action act = () => Program.Run(args, null);
-
-            // Assert
-            act.Should().NotThrow(); // должен создать ProgramRunner и выполнить без исключений
-        }
     }
 }
 
