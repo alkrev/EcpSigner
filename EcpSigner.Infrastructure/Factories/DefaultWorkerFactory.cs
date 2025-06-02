@@ -27,29 +27,26 @@ namespace EcpSigner.Infrastructure.Factories
     public class DefaultWorkerFactory: IWorkerFactory
     {
         private readonly ILogger _logger;
-        private readonly string _configPath;
-        public DefaultWorkerFactory(ILogger logger, string configPath)
+        private readonly IInfrastructureFactory _infraFactory;
+        public DefaultWorkerFactory(ILogger logger, IInfrastructureFactory infraFactory)
         {
             _logger = logger;
-            _configPath = configPath;
+            _infraFactory = infraFactory;
         }
 
         public IJob CreateWorker(string[] args)
         {
             // Инфраструктура с использованием библиотек
-            var config = new JsonConfigurationProvider(_logger, _configPath);
-            var webClient = new WebClient(new Client(config.Get().url));
-            var portalServiceDecorator = new PortalServiceDecorator(new PortalService(new Main(webClient), new EMD(webClient)), _logger);
-            var crypto = new Crypto();
-            var store = new CurrentUserStore();
-            var signatureServiceDecorator = new SignatureServiceDecorator(new SignatureService(crypto, store), _logger);
-            var cache = new CacheService(new Cache(config.Get().cacheMinutes));
-            var dates = new DatesService(args);
-            var flashWindowService = new FlashWindowService(new FlashWindow(Process.GetCurrentProcess().MainWindowHandle));
-            var delayProvider = new DelayProvider();
-            var dateTimeProvider = new DateTimeProvider();
+            var config = _infraFactory.CreateConfigurationProvider();
+            var portalService = _infraFactory.CreatePortalService();
+            var signatureService = _infraFactory.CreateSignatureService();
+            var cache = _infraFactory.CreateCacheService();
+            var dates = _infraFactory.CreateDatesService(args);
+            var flashWindowService = _infraFactory.CreateFlashWindowService();
+            var delayProvider = _infraFactory.CreateDelayProvider();
+            var dateTimeProvider = _infraFactory.CreateDateTimeProvider();
             // Бизнес-логика (приложение)
-            var signDocumentWorflow = new SignDocumentWorflow(portalServiceDecorator, signatureServiceDecorator, _logger);
+            var signDocumentWorflow = new SignDocumentWorflow(portalService, signatureService, _logger);
             var signDocumentsLoopDecorator = new SignDocumentsLoopDecorator(
                 new SignDocumentsLoop(_logger, config, signDocumentWorflow, delayProvider),
                 cache,
@@ -57,8 +54,8 @@ namespace EcpSigner.Infrastructure.Factories
                 delayProvider
             );
             var prepareSigningWorkflow = new PrepareSigningWorkflow(
-                portalServiceDecorator,
-                signatureServiceDecorator,
+                portalService,
+                signatureService,
                 _logger,
                 config,
                 dates,

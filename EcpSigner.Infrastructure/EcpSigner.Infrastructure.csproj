@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Adapters\CertificateAdapter.cs" />
     <Compile Include="Factories\DefaultWorkerFactory.cs" />
+    <Compile Include="Factories\InfrastructureFactory.cs" />
     <Compile Include="Services\ConsoleCancellationService .cs" />
     <Compile Include="Services\DateTimeProvider.cs" />
     <Compile Include="Shared\CachingTools\Cache.cs" />

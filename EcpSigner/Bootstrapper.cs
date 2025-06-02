@@ -1,4 +1,5 @@
 ﻿using EcpSigner.Application.Interfaces;
+using EcpSigner.Domain.Interfaces;
 using EcpSigner.Infrastructure.Factories;
 using EcpSigner.Infrastructure.Services;
 using System;
@@ -13,8 +14,9 @@ namespace EcpSigner
             var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
             try
             {
-                var factory = new DefaultWorkerFactory(logger, configPath);
-                runner = runner ?? new ProgramRunner(logger, factory);
+                var infrastructureFactory = new InfrastructureFactory(logger, configPath);
+                var workerFactory = new DefaultWorkerFactory(logger, infrastructureFactory);
+                runner = runner ?? new ProgramRunner(logger, workerFactory);
                 runner.RunAsync(args).GetAwaiter().GetResult();
             }
             catch (Exception ex)
