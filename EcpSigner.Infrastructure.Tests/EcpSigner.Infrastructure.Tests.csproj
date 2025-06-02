@@ -12,6 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <COMReference Include="CAPICOM">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>1</VersionMinor>
+      <VersionMajor>2</VersionMajor>
+      <Guid>bd26b198-ee42-4725-9b23-afa912434229</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,6 +36,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcpSigner.Application\EcpSigner.Application.csproj" />
+    <ProjectReference Include="..\EcpSigner.Domain\EcpSigner.Domain.csproj" />
+    <ProjectReference Include="..\EcpSigner.Infrastructure\EcpSigner.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ecp\Ecp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
