@@ -12,8 +12,6 @@ namespace EcpSigner.Infrastructure.Repositories
     {
         private IMain _main;
         private IEMD _emd;
-        private bool isLoggedOn;
-        public bool IsLoggedOn { get => isLoggedOn; }
         public PortalService(
             IMain main,
             IEMD emd
@@ -21,7 +19,6 @@ namespace EcpSigner.Infrastructure.Repositories
         {
             _main = main;
             _emd = emd;
-            isLoggedOn = false;
         }
         /// <summary>
         /// Выполняем вход
