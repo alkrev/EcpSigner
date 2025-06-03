@@ -1,13 +1,14 @@
 ﻿using Xunit;
-using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
-using EcpSigner.Infrastructure.Repositories;
-using Ecp.Portal;
+using FluentAssertions;
+using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
+using EcpSigner.Infrastructure.Repositories;
 using EcpSigner.Domain.Exceptions;
+using Ecp.Portal;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace EcpSigner.Infrastructure.Repositories
@@ -16,158 +17,248 @@ namespace EcpSigner.Infrastructure.Repositories
     {
         private readonly Mock<IMain> _mainMock;
         private readonly Mock<IEMD> _emdMock;
-        private readonly PortalService _service;
+        private readonly PortalService _sut;
 
         public PortalServiceTests()
         {
             _mainMock = new Mock<IMain>();
             _emdMock = new Mock<IEMD>();
-            _service = new PortalService(_mainMock.Object, _emdMock.Object);
+            _sut = new PortalService(_mainMock.Object, _emdMock.Object);
         }
 
         [Fact]
-        public async Task Login_ShouldSucceed_WhenReplyIsSuccessful()
+        public async Task Login_Should_ThrowBreakWorkException_When_LoginFails()
         {
             // Arrange
-            var loginReply = new loginReply { success = true };
-            _mainMock.Setup(m => m.Login("user", "pass")).ReturnsAsync(loginReply);
+            _mainMock.Setup(m => m.Login("user", "pass"))
+                     .ReturnsAsync(new loginReply { success = false, Error_Msg = "Invalid credentials" });
 
             // Act
-            Func<Task> act = async () => await _service.Login("user", "pass");
-
-            // Assert
-            await act.Should().NotThrowAsync();
-        }
-
-        [Fact]
-        public async Task Login_ShouldThrowBreakWorkException_WhenLoginFails()
-        {
-            // Arrange
-            var loginReply = new loginReply { success = false, Error_Msg = "Login failed" };
-            _mainMock.Setup(m => m.Login("user", "pass")).ReturnsAsync(loginReply);
-
-            // Act
-            Func<Task> act = async () => await _service.Login("user", "pass");
+            var act = async () => await _sut.Login("user", "pass");
 
             // Assert
             await act.Should().ThrowAsync<BreakWorkException>()
-                .WithMessage("Login failed");
+                     .WithMessage("Invalid credentials");
         }
 
         [Fact]
-        public async Task SearchDocuments_ShouldReturnDocuments_WhenSuccessful()
+        public async Task Login_Should_NotThrow_When_LoginSucceeds()
+        {
+            _mainMock.Setup(m => m.Login(It.IsAny<string>(), It.IsAny<string>()))
+                     .ReturnsAsync(new loginReply { success = true });
+
+            await _sut.Invoking(s => s.Login("login", "pass"))
+                      .Should().NotThrowAsync();
+        }
+
+        [Fact]
+        public async Task SearchDocuments_Should_ReturnAllPages()
         {
             // Arrange
-            var docsPage = new List<loadEMDSignBundleWindowReply>
+            var token = CancellationToken.None;
+            var reply = new List<loadEMDSignBundleWindowReply>
         {
-            new loadEMDSignBundleWindowReply { Document_Name = "Doc1", EMDRegistry_ObjectID = "1" }
+            new loadEMDSignBundleWindowReply { EMDRegistry_ObjectID = "id1", Document_Name = "Doc1" }
         };
+
             _emdMock.SetupSequence(e => e.loadEMDSignBundleWindow(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(docsPage)
-                .ReturnsAsync(new List<loadEMDSignBundleWindowReply>());
+                    .ReturnsAsync(reply)
+                    .ReturnsAsync(new List<loadEMDSignBundleWindowReply>());
 
             // Act
-            var result = await _service.SearchDocuments("2024-01-01", "2024-01-31", CancellationToken.None);
-
-            // Assert
-            result.Should().HaveCount(1);
-            result[0].ID.Should().Be("1");
-        }
-
-        [Fact]
-        public async Task SearchDocuments_ShouldThrowStopWorkException_WhenCancelled()
-        {
-            // Arrange
-            var cts = new CancellationTokenSource();
-            cts.Cancel();
-
-            // Act
-            Func<Task> act = async () => await _service.SearchDocuments("2024-01-01", "2024-01-31", cts.Token);
-
-            // Assert
-            await act.Should().ThrowAsync<StopWorkException>();
-        }
-
-        [Fact]
-        public async Task LoadEcpCertificates_ShouldReturnConvertedCertificates()
-        {
-            // Arrange
-            var certs = new List<loadEMDCertificateListReply>
-        {
-            new loadEMDCertificateListReply { EMDCertificate_id = "id1", EMDCertificate_SHA1 = "0xABC" }
-        };
-            _emdMock.Setup(e => e.loadEMDCertificateList()).ReturnsAsync(certs);
-
-            // Act
-            var result = await _service.LoadEcpCertificates();
+            var result = await _sut.SearchDocuments("2020-01-01", "2020-01-31", token);
 
             // Assert
             result.Should().HaveCount(1);
             result[0].ID.Should().Be("id1");
-            result[0].thumbprint.Should().Be("00ABC");
         }
 
         [Fact]
-        public async Task CheckBeforeSign_ShouldThrowDocumentSigningException_WhenReplyFails()
+        public async Task SearchDocuments_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
         {
-            // Arrange
-            var reply = new checkBeforeSignReply { success = false, Error_Msg = "Error" };
-            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
-            var cert = new EcpCertificate { ID = "cert" };
-            _emdMock.Setup(e => e.checkBeforeSign("type", "id", "cert", "v1")).ReturnsAsync(reply);
+            _emdMock.Setup(e => e.loadEMDSignBundleWindow(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                    .ThrowsAsync(new NotLoggedInException("Not logged in"));
 
-            // Act
-            Func<Task> act = async () => await _service.CheckBeforeSign(doc, cert, "doc");
+            Func<Task> act = async () => await _sut.SearchDocuments("2020-01-01", "2020-01-31", CancellationToken.None);
 
-            // Assert
-            await act.Should().ThrowAsync<DocumentSigningException>().WithMessage("Error");
+            await act.Should().ThrowAsync<IsNotLoggedInException>()
+                     .WithMessage("Not logged in");
         }
 
         [Fact]
-        public async Task GetSignData_ShouldReturnData_WhenSuccessful()
+        public async Task LoadEcpCertificates_Should_ConvertCertificatesCorrectly()
         {
-            // Arrange
-            var rep = new getEMDVersionSignDataReply
+            var certReply = new loadEMDCertificateListReply
             {
-                success = true,
-                toSign = new[] { new Tosign { docBase64 = "doc", hashBase64 = "hash" } }
+                EMDCertificate_id = "cert1",
+                EMDCertificate_SHA1 = "0xabc123"
             };
-            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
-            var cert = new EcpCertificate { ID = "cert" };
-            _emdMock.Setup(e => e.getEMDVersionSignData("type", "id", "cert", 1)).ReturnsAsync(rep);
 
-            // Act
-            var result = await _service.GetSignData(doc, cert, "doc");
+            _emdMock.Setup(e => e.loadEMDCertificateList())
+                    .ReturnsAsync(new List<loadEMDCertificateListReply> { certReply });
 
-            // Assert
-            result.docBase64.Should().Be("doc");
-            result.hashBase64.Should().Be("hash");
+            var result = await _sut.LoadEcpCertificates();
+
+            result.Should().HaveCount(1);
+            result[0].ID.Should().Be("cert1");
+            result[0].thumbprint.Should().Be("00ABC123");
         }
 
         [Fact]
-        public async Task GetSignData_ShouldThrow_WhenToSignIsEmpty()
+        public async Task CheckBeforeSign_Should_ThrowDocumentSigningException_When_ReplyFails()
         {
-            var rep = new getEMDVersionSignDataReply { success = true, toSign = new Tosign[0] };
-            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
-            var cert = new EcpCertificate { ID = "cert" };
-            _emdMock.Setup(e => e.getEMDVersionSignData("type", "id", "cert", 1)).ReturnsAsync(rep);
+            _emdMock.Setup(e => e.checkBeforeSign(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(new checkBeforeSignReply { success = false, Error_Msg = "Cannot sign" });
 
-            Func<Task> act = async () => await _service.GetSignData(doc, cert, "doc");
-
-            await act.Should().ThrowAsync<DocumentSigningException>().WithMessage("GetSignData: toSign.Length = 0");
-        }
-
-        [Fact]
-        public async Task SaveSignature_ShouldThrow_WhenSaveFails()
-        {
             var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
-            var cert = new EcpCertificate { ID = "cert" };
-            _emdMock.Setup(e => e.saveEMDSignatures("type", "id", "v1", "hash", "sig", "cert"))
-                .ReturnsAsync(new saveEMDSignaturesReply { success = false, Error_Msg = "save failed" });
+            var cert = new EcpCertificate { ID = "cert1" };
 
-            Func<Task> act = async () => await _service.SaveSignature(doc, "hash", "sig", cert, "doc");
+            Func<Task> act = async () => await _sut.CheckBeforeSign(doc, cert, "doc");
 
-            await act.Should().ThrowAsync<DocumentSigningException>().WithMessage("save failed");
+            await act.Should().ThrowAsync<DocumentSigningException>()
+                     .WithMessage("Cannot sign");
+        }
+
+        [Fact]
+        public async Task CheckBeforeSign_ShouldNotThrow_WhenSuccess()
+        {
+            _emdMock.Setup(e => e.checkBeforeSign(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(new checkBeforeSignReply { success = true });
+
+            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.CheckBeforeSign(doc, cert, "doc");
+
+            await act.Should().NotThrowAsync();
+        }
+
+        [Fact]
+        public async Task GetSignData_Should_ReturnTuple_When_Valid()
+        {
+            _emdMock.Setup(e => e.getEMDVersionSignData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                    .ReturnsAsync(new getEMDVersionSignDataReply
+                    {
+                        success = true,
+                        toSign = [new() { docBase64 = "doc", hashBase64 = "hash" }]
+                    });
+
+            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            var (docBase64, hashBase64) = await _sut.GetSignData(doc, cert, "doc");
+
+            docBase64.Should().Be("doc");
+            hashBase64.Should().Be("hash");
+        }
+
+        [Fact]
+        public async Task GetSignData_Should_Throw_When_IsNotSuccess()
+        {
+            _emdMock.Setup(e => e.getEMDVersionSignData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                    .ReturnsAsync(new getEMDVersionSignDataReply
+                    {
+                        success = false,
+                        Error_Msg = "getEMDVersionSignData error"
+                    });
+
+            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.GetSignData(doc, cert, "doc");
+
+            await act.Should().ThrowAsync<DocumentSigningException>()
+                     .WithMessage("getEMDVersionSignData error");
+        }
+
+        [Fact]
+        public async Task GetSignData_Should_Throw_When_ToSignIsEmpty()
+        {
+            _emdMock.Setup(e => e.getEMDVersionSignData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                    .ReturnsAsync(new getEMDVersionSignDataReply
+                    {
+                        success = true,
+                        toSign = new Tosign[0]
+                    });
+
+            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.GetSignData(doc, cert, "doc");
+
+            await act.Should().ThrowAsync<DocumentSigningException>()
+                     .WithMessage("GetSignData: toSign.Length = 0");
+        }
+
+        [Fact]
+        public async Task SaveSignature_Should_Throw_When_ReplyFails()
+        {
+            _emdMock.Setup(e => e.saveEMDSignatures(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(new saveEMDSignaturesReply { success = false, Error_Msg = "Save failed" });
+
+            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.SaveSignature(doc, "hash", "sig", cert, "doc");
+
+            await act.Should().ThrowAsync<DocumentSigningException>()
+                     .WithMessage("Save failed");
+        }
+
+        [Fact]
+        public async Task SaveSignature_ShouldNotThrow_WhenSuccess()
+        {
+            _emdMock.Setup(e => e.saveEMDSignatures(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(new saveEMDSignaturesReply { success = true, Error_Msg = "Save success" });
+
+            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.SaveSignature(doc, "hash", "sig", cert, "doc");
+
+            await act.Should().NotThrowAsync();
+        }
+        [Fact]
+        public async Task GetSignData_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        {
+            _emdMock.Setup(e => e.getEMDVersionSignData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                    .ThrowsAsync(new NotLoggedInException("Session expired"));
+
+            var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.GetSignData(doc, cert, "doc");
+
+            await act.Should().ThrowAsync<IsNotLoggedInException>()
+                     .WithMessage("Session expired");
+        }
+        [Fact]
+        public async Task CheckBeforeSign_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        {
+            _emdMock.Setup(e => e.checkBeforeSign(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ThrowsAsync(new NotLoggedInException("Auth error"));
+
+            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.CheckBeforeSign(doc, cert, "doc");
+
+            await act.Should().ThrowAsync<IsNotLoggedInException>()
+                     .WithMessage("Auth error");
+        }
+        [Fact]
+        public async Task SaveSignature_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        {
+            _emdMock.Setup(e => e.saveEMDSignatures(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    .ThrowsAsync(new NotLoggedInException("Token expired"));
+
+            var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
+            var cert = new EcpCertificate { ID = "cert1" };
+
+            Func<Task> act = async () => await _sut.SaveSignature(doc, "hash", "sig", cert, "doc");
+
+            await act.Should().ThrowAsync<IsNotLoggedInException>()
+                     .WithMessage("Token expired");
         }
     }
 }
