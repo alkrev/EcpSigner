@@ -21,11 +21,7 @@ namespace EcpSigner.Infrastructure.Repositories
         }
         public Dictionary<string, ICertificate> GetUserCertificates()
         {
-            var comCerts = _store.GetUserCertificates();
-            return comCerts.ToDictionary(
-                pair => pair.Key,
-                pair => (ICertificate)new CertificateAdapter(pair.Value)
-            );
+            return _store.GetUserCertificates();
         }
         public string Sign(ICertificate certificate, string docBase64, string document)
         {

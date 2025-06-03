@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcpSigner.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CryptographyTools.Store
 {
     public interface ICurrentUserStore
     {
-        Dictionary<string, CAPICOM.ICertificate> GetUserCertificates();
+        Dictionary<string, ICertificate> GetUserCertificates();
     }
 }

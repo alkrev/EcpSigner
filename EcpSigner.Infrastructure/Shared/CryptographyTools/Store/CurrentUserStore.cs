@@ -1,4 +1,5 @@
-﻿using CAPICOM;
+﻿using EcpSigner.Domain.Interfaces;
+using EcpSigner.Infrastructure.Adapters;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -20,10 +21,10 @@ namespace CryptographyTools.Store
             Dictionary<string, ICertificate> certs = new Dictionary<string, ICertificate>();
             try
             {
-                oStore.Open(CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
-                foreach (ICertificate oCert in oStore.Certificates)
+                oStore.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
+                foreach (CAPICOM.ICertificate oCert in oStore.Certificates)
                 {
-                    certs[oCert.Thumbprint] = oCert;
+                    certs[oCert.Thumbprint] = (ICertificate)new CertificateAdapter(oCert);
                 }
                 return certs;
             }
@@ -43,9 +44,9 @@ namespace CryptographyTools.Store
                 throw new ArgumentException("отпечаток не может быть пустым");
             try
             {
-                oStore.Open(CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
-                ICertificates2 certificates = (ICertificates2)oStore.Certificates;
-                certificates = certificates.Find(CAPICOM_CERTIFICATE_FIND_TYPE.CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint, true);
+                oStore.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
+                CAPICOM.ICertificates2 certificates = (CAPICOM.ICertificates2)oStore.Certificates;
+                certificates = certificates.Find(CAPICOM.CAPICOM_CERTIFICATE_FIND_TYPE.CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint, true);
 
                 return certificates.Count > 0 ? (ICertificate)certificates[0] : null;
             }
