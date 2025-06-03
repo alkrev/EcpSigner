@@ -84,6 +84,8 @@
     <Compile Include="Factories\WebClientFactory.cs" />
     <Compile Include="Services\ConsoleCancellationService .cs" />
     <Compile Include="Services\DateTimeProvider.cs" />
+    <Compile Include="Shared\ConsoleTools\ConsoleWrapper.cs" />
+    <Compile Include="Shared\ConsoleTools\IConsoleWrapper.cs" />
     <Compile Include="Shared\CachingTools\Cache.cs" />
     <Compile Include="Shared\CachingTools\ICache.cs" />
     <Compile Include="Configuration\JsonConfigurationProvider.cs" />

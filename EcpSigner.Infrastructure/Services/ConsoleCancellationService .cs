@@ -1,33 +1,36 @@
-﻿using EcpSigner.Domain.Interfaces;
+﻿using ConsoleTools;
+using EcpSigner.Domain.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace EcpSigner.Infrastructure.Services
 {
     public class ConsoleCancellationService : ICancellationService
     {
         private readonly ILogger _logger;
+        private readonly IConsoleWrapper _console;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
-        public ConsoleCancellationService(ILogger logger)
+        public ConsoleCancellationService(ILogger logger, IConsoleWrapper console)
         {
             _logger = logger;
+            _console = console;
         }
 
         public CancellationToken Token => _cts.Token;
 
         public void StartListeningForCancel()
         {
-            Console.CancelKeyPress += (sender, e) =>
+            _console.CancelKeyPress += HandleCancelKeyPress;
+        }
+        internal void HandleCancelKeyPress(object sender, EventArgs e)
+        {
+            if (e is ConsoleCancelEventArgs cancelArgs)
             {
-                e.Cancel = true;
+                cancelArgs.Cancel = true;
                 _logger.Info("Ctrl-C нажато");
                 _cts.Cancel();
-            };
+            }
         }
     }
 }
