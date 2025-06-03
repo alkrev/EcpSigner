@@ -14,7 +14,7 @@ namespace EcpSigner.Infrastructure.Configuration
     {
         private readonly ILogger _logger;
         private readonly string _fileName;
-        private AppSettings _appSettings;
+        private static AppSettings _appSettings;
         public JsonConfigurationProvider(ILogger logger, string fileName)
         {
             _logger = logger;
