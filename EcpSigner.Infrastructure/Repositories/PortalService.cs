@@ -1,14 +1,10 @@
-﻿using Ecp.Web;
-using Ecp.Portal;
-using CachingTools;
+﻿using Ecp.Portal;
 using EcpSigner.Domain.Interfaces;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using EcpSigner.Domain.Models;
 using System.Threading;
 using EcpSigner.Domain.Exceptions;
-using System;
-using CAPICOM;
 
 namespace EcpSigner.Infrastructure.Repositories
 {

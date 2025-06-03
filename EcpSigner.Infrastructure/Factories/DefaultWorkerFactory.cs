@@ -1,26 +1,9 @@
-﻿using CachingTools;
-using CryptographyTools.Signing.CryptoPro;
-using CryptographyTools.Store;
-using Ecp.Portal;
-using Ecp.Web;
-using EcpSigner.Application.Decorators;
+﻿using EcpSigner.Application.Decorators;
 using EcpSigner.Application.Interfaces;
 using EcpSigner.Application.Jobs;
 using EcpSigner.Domain.Interfaces;
-using EcpSigner.Infrastructure.Configuration;
-using EcpSigner.Infrastructure.Decorators;
-using EcpSigner.Infrastructure.Repositories;
 using EcpSigner.Infrastructure.Services;
-using EcpSigner.Infrastructure.WebClients;
 using EcpSigner.Infrastructure.Workers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using WindowsTools;
 
 namespace EcpSigner.Infrastructure.Factories
 {
