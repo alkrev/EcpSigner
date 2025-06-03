@@ -14,7 +14,21 @@ namespace EcpSigner
             var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
             try
             {
-                var infrastructureFactory = new InfrastructureFactory(logger, configPath);
+                var configurationFactory = new ConfigurationProviderFactory(logger, configPath);
+                var webClientFactory = new WebClientFactory();
+                var cryptoFactory = new CryptoFactory();
+                var storeFactory = new StoreFactory();
+                var cacheFactory = new CacheFactory();
+                var flashWindowFactory = new FlashWindowFactory();
+                var infrastructureFactory = new InfrastructureFactory(
+                    logger, 
+                    configurationFactory,
+                    webClientFactory,
+                    cryptoFactory,
+                    storeFactory,
+                    cacheFactory,
+                    flashWindowFactory
+                    );
                 var workerFactory = new DefaultWorkerFactory(logger, infrastructureFactory);
                 runner = runner ?? new ProgramRunner(logger, workerFactory);
                 runner.RunAsync(args).GetAwaiter().GetResult();

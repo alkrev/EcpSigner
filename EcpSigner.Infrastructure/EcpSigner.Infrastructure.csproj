@@ -68,8 +68,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\CertificateAdapter.cs" />
+    <Compile Include="Factories\CacheFactory.cs" />
+    <Compile Include="Factories\ConfigurationFactory.cs" />
+    <Compile Include="Factories\CryptoFactory.cs" />
     <Compile Include="Factories\DefaultWorkerFactory.cs" />
+    <Compile Include="Factories\FlashWindowFactory.cs" />
+    <Compile Include="Factories\ICacheFactory.cs" />
+    <Compile Include="Factories\IConfigurationProviderFactory.cs" />
+    <Compile Include="Factories\ICryptoFactory.cs" />
+    <Compile Include="Factories\IFlashWindowFactory.cs" />
     <Compile Include="Factories\InfrastructureFactory.cs" />
+    <Compile Include="Factories\IStoreFactory.cs" />
+    <Compile Include="Factories\IWebClientFactory.cs" />
+    <Compile Include="Factories\StoreFactory.cs" />
+    <Compile Include="Factories\WebClientFactory.cs" />
     <Compile Include="Services\ConsoleCancellationService .cs" />
     <Compile Include="Services\DateTimeProvider.cs" />
     <Compile Include="Shared\CachingTools\Cache.cs" />

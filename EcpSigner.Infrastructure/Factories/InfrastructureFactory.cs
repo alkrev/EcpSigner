@@ -1,58 +1,63 @@
-﻿using CachingTools;
-using CryptographyTools.Signing.CryptoPro;
-using CryptographyTools.Store;
-using Ecp.Portal;
-using Ecp.Web;
+﻿using Ecp.Portal;
 using EcpSigner.Application.Interfaces;
 using EcpSigner.Domain.Interfaces;
-using EcpSigner.Infrastructure.Configuration;
 using EcpSigner.Infrastructure.Decorators;
 using EcpSigner.Infrastructure.Repositories;
 using EcpSigner.Infrastructure.Services;
-using EcpSigner.Infrastructure.WebClients;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WindowsTools;
 
 namespace EcpSigner.Infrastructure.Factories
 {
     public class InfrastructureFactory : IInfrastructureFactory
     {
-        private readonly string _configPath;
         private readonly ILogger _logger;
+        private readonly IConfigurationProviderFactory _configurationFactory;
+        private readonly IWebClientFactory _webClientFactory;
+        private readonly ICryptoFactory _cryptoFactory;
+        private readonly IStoreFactory _storeFactory;
+        private readonly ICacheFactory _cacheFactory;
+        private readonly IFlashWindowFactory _flashWindowFactory;
 
-        public InfrastructureFactory(ILogger logger, string configPath) 
+        public InfrastructureFactory(
+            ILogger logger,
+            IConfigurationProviderFactory configurationFactory,
+            IWebClientFactory webClientFactory,
+            ICryptoFactory cryptoFactory,
+            IStoreFactory storeFactory,
+            ICacheFactory cacheFactory,
+            IFlashWindowFactory flashWindowFactory
+        ) 
         {
-            _configPath = configPath;
             _logger = logger;
+            _configurationFactory = configurationFactory;
+            _webClientFactory = webClientFactory;
+            _cryptoFactory = cryptoFactory;
+            _storeFactory = storeFactory;
+            _cacheFactory = cacheFactory;
+            _flashWindowFactory = flashWindowFactory;
         }
 
         public IConfigurationProvider CreateConfigurationProvider()
         {
-            return new JsonConfigurationProvider(_logger, _configPath);
+            return _configurationFactory.Create();
         }
         public IPortalService CreatePortalService()
         {
             var config = CreateConfigurationProvider();
-            var webClient = new WebClient(new Client(config.Get().url));
+            var webClient = _webClientFactory.Create(config.Get().url);
             var portalService = new PortalService(new Main(webClient), new EMD(webClient));
             return new PortalServiceDecorator(portalService, _logger);
         }
         public ISignatureService CreateSignatureService()
         {
-            var crypto = new Crypto();
-            var store = new CurrentUserStore();
+            var crypto = _cryptoFactory.Create();
+            var store = _storeFactory.Create();
             var signatureService = new SignatureService(crypto, store);
             return new SignatureServiceDecorator(signatureService, _logger);
         }
         public ICacheService CreateCacheService()
         {
             var config = CreateConfigurationProvider();
-            var cache = new Cache(config.Get().cacheMinutes);
+            var cache = _cacheFactory.Create(config.Get().cacheMinutes);
             return new CacheService(cache);
         }
         public IDatesService CreateDatesService(string[] args)
@@ -61,7 +66,7 @@ namespace EcpSigner.Infrastructure.Factories
         }
         public IFlashWindowService CreateFlashWindowService()
         {
-            var flashWindow = new FlashWindow(Process.GetCurrentProcess().MainWindowHandle);
+            var flashWindow = _flashWindowFactory.Create();
             return new FlashWindowService(flashWindow);
         }
         public IDelayProvider CreateDelayProvider()
