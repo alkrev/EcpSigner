@@ -16,6 +16,7 @@ namespace EcpSigner.Infrastructure.Factories
         private readonly IStoreFactory _storeFactory;
         private readonly ICacheFactory _cacheFactory;
         private readonly IFlashWindowFactory _flashWindowFactory;
+        private readonly IDateTimeProviderFactory _dateTimeProviderFactory;
 
         public InfrastructureFactory(
             ILogger logger,
@@ -24,7 +25,8 @@ namespace EcpSigner.Infrastructure.Factories
             ICryptoFactory cryptoFactory,
             IStoreFactory storeFactory,
             ICacheFactory cacheFactory,
-            IFlashWindowFactory flashWindowFactory
+            IFlashWindowFactory flashWindowFactory,
+            IDateTimeProviderFactory dateTimeProviderFactory
         ) 
         {
             _logger = logger;
@@ -34,6 +36,7 @@ namespace EcpSigner.Infrastructure.Factories
             _storeFactory = storeFactory;
             _cacheFactory = cacheFactory;
             _flashWindowFactory = flashWindowFactory;
+            _dateTimeProviderFactory = dateTimeProviderFactory;
         }
 
         public IConfigurationProvider CreateConfigurationProvider()
@@ -62,7 +65,8 @@ namespace EcpSigner.Infrastructure.Factories
         }
         public IDatesService CreateDatesService(string[] args)
         {
-            return new DatesService(args);
+            var dateTimeProvider = _dateTimeProviderFactory.Create();
+            return new DatesService(args, dateTimeProvider);
         }
         public IFlashWindowService CreateFlashWindowService()
         {
@@ -75,7 +79,7 @@ namespace EcpSigner.Infrastructure.Factories
         }
         public IDateTimeProvider CreateDateTimeProvider()
         {
-            return new DateTimeProvider();
+            return _dateTimeProviderFactory.Create();
         }
     }
 }

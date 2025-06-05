@@ -20,6 +20,7 @@ namespace EcpSigner
                 var storeFactory = new StoreFactory();
                 var cacheFactory = new CacheFactory();
                 var flashWindowFactory = new FlashWindowFactory();
+                var dateTimeProviderFactory = new DateTimeProviderFactory();
                 var infrastructureFactory = new InfrastructureFactory(
                     logger, 
                     configurationFactory,
@@ -27,7 +28,8 @@ namespace EcpSigner
                     cryptoFactory,
                     storeFactory,
                     cacheFactory,
-                    flashWindowFactory
+                    flashWindowFactory,
+                    dateTimeProviderFactory
                     );
                 var workerFactory = new DefaultWorkerFactory(logger, infrastructureFactory);
                 runner = runner ?? new ProgramRunner(logger, workerFactory);
