@@ -71,6 +71,8 @@
     <Compile Include="Factories\CacheFactory.cs" />
     <Compile Include="Factories\ConfigurationFactory.cs" />
     <Compile Include="Factories\CryptoFactory.cs" />
+    <Compile Include="Factories\DateTimeProviderFactory.cs" />
+    <Compile Include="Factories\IDateTimeProviderFactory.cs" />
     <Compile Include="Factories\DefaultWorkerFactory.cs" />
     <Compile Include="Factories\FlashWindowFactory.cs" />
     <Compile Include="Factories\ICacheFactory.cs" />
