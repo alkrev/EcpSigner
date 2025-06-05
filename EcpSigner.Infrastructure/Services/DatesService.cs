@@ -1,18 +1,16 @@
 ﻿using EcpSigner.Domain.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcpSigner.Infrastructure.Services
 {
     public class DatesService : IDatesService
     {
         private readonly string[] args;
-        public DatesService (string[] _args)
+        private readonly IDateTimeProvider _dateTimeProvider;
+        public DatesService (string[] _args, IDateTimeProvider dateTimeProvider)
         {
             args = _args;
+            _dateTimeProvider = dateTimeProvider;
         }
         /**
         * Определяем диапазон дат в зависимости от параметров командной строки
@@ -41,7 +39,7 @@ namespace EcpSigner.Infrastructure.Services
         */
         private (string startDate, string endDate) GetStartEndDates()
         {
-            DateTime dateTime = DateTime.Now;
+            DateTime dateTime = _dateTimeProvider.Now;
             string endDate = dateTime.ToString("dd.MM.yyyy");
             string startDate;
             int year = dateTime.Year;
