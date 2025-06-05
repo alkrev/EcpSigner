@@ -26,6 +26,7 @@ namespace EcpSigner.Infrastructure.Factories
         private readonly Mock<IStoreFactory> _storeFactoryMock = new();
         private readonly Mock<ICacheFactory> _cacheFactoryMock = new();
         private readonly Mock<IFlashWindowFactory> _flashWindowFactoryMock = new();
+        private readonly Mock<IDateTimeProviderFactory> _dateTimeProviderwFactoryMock = new();
 
         private readonly InfrastructureFactory _factory;
 
@@ -38,7 +39,8 @@ namespace EcpSigner.Infrastructure.Factories
                 _cryptoFactoryMock.Object,
                 _storeFactoryMock.Object,
                 _cacheFactoryMock.Object,
-                _flashWindowFactoryMock.Object
+                _flashWindowFactoryMock.Object,
+                _dateTimeProviderwFactoryMock.Object
             );
         }
 
