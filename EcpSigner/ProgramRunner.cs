@@ -1,4 +1,5 @@
-﻿using EcpSigner.Application.Interfaces;
+﻿using ConsoleTools;
+using EcpSigner.Application.Interfaces;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Infrastructure.Services;
 using System;
@@ -16,7 +17,7 @@ namespace EcpSigner
         {
             _logger = logger;
             _workerFactory = workerFactory;
-            _cancellationService = cancellationService ?? new ConsoleCancellationService(logger);
+            _cancellationService = cancellationService ?? new ConsoleCancellationService(logger, new ConsoleWrapper());
         }
 
         public async Task RunAsync(string[] args)
