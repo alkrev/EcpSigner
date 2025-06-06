@@ -26,7 +26,7 @@ namespace EcpSigner.Infrastructure.Factories
         private readonly Mock<IStoreFactory> _storeFactoryMock = new();
         private readonly Mock<ICacheFactory> _cacheFactoryMock = new();
         private readonly Mock<IFlashWindowFactory> _flashWindowFactoryMock = new();
-        private readonly Mock<IDateTimeProviderFactory> _dateTimeProviderwFactoryMock = new();
+        private readonly Mock<IDateTimeProviderFactory> _dateTimeProviderFactoryMock = new();
 
         private readonly InfrastructureFactory _factory;
 
@@ -40,7 +40,7 @@ namespace EcpSigner.Infrastructure.Factories
                 _storeFactoryMock.Object,
                 _cacheFactoryMock.Object,
                 _flashWindowFactoryMock.Object,
-                _dateTimeProviderwFactoryMock.Object
+                _dateTimeProviderFactoryMock.Object
             );
         }
 
@@ -100,11 +100,12 @@ namespace EcpSigner.Infrastructure.Factories
             // Arrange
             var configMock = new Mock<IConfigurationProvider>();
             var configObject = new Domain.Models.AppSettings { url = "url", cacheMinutes = 15 };
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             configMock.Setup(x => x.Get()).Returns(configObject);
             _configFactoryMock.Setup(x => x.Create()).Returns(configMock.Object);
 
             var cacheMock = new Mock<ICache>();
-            _cacheFactoryMock.Setup(x => x.Create(configObject.cacheMinutes)).Returns(cacheMock.Object);
+            _cacheFactoryMock.Setup(x => x.Create(configObject.cacheMinutes, dateTimeProviderMock.Object)).Returns(cacheMock.Object);
 
             // Act
             var result = _factory.CreateCacheService();
@@ -153,6 +154,10 @@ namespace EcpSigner.Infrastructure.Factories
         [Fact]
         public void CreateDateTimeProvider_ShouldReturnDateTimeProvider()
         {
+            // Arrange
+            var dateTimeProvider = new DateTimeProvider();
+            _dateTimeProviderFactoryMock.Setup(x => x.Create()).Returns(dateTimeProvider);
+
             // Act
             var result = _factory.CreateDateTimeProvider();
 
