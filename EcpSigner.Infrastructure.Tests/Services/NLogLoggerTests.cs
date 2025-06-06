@@ -1,19 +1,18 @@
 ﻿using Xunit;
 using Moq;
 using FluentAssertions;
-using NLog;
 using EcpSigner.Infrastructure.Services;
 
 namespace EcpSigner.Infrastructure.Services
 {
     public class NLogLoggerTests
     {
-        private readonly Mock<Logger> _mockLogger;
+        private readonly Mock<NLog.ILogger> _mockLogger;
         private readonly NLogLogger _nlogLogger;
 
         public NLogLoggerTests()
         {
-            _mockLogger = new Mock<Logger>();
+            _mockLogger = new Mock<NLog.ILogger>();
             _nlogLogger = new NLogLogger(_mockLogger.Object);
         }
 
@@ -83,13 +82,13 @@ namespace EcpSigner.Infrastructure.Services
         }
 
         [Fact]
-        public void Flush_ShouldCallNLogLogManagerFlush()
+        public void Flush_ShouldNotThrow()
         {
             // Act
-            var action = () => _nlogLogger.Flush();
+            var act = () => _nlogLogger.Flush();
 
             // Assert
-            action.Should().NotThrow(); // Мы не можем замокать статический метод, просто проверим отсутствие исключения
+            act.Should().NotThrow(); // Проверяем, что метод не выбрасывает исключение
         }
     }
 }
