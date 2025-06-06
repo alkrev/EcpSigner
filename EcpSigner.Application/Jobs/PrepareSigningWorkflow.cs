@@ -181,7 +181,7 @@ namespace EcpSigner.Application.Jobs
                 .FindAll(doc => DocumentFilters.NeedsSigning(doc))  // Требуется подпись и нет ошибок
                 .FindAll(doc => !DocumentFilters.IgnoredDocument(doc, _config.Get().ignoreDocTypesDict)) // Документ не игнорируется по типу
                 .FindAll(doc => !_cache.Contains(doc.ID)); // Документ не содержится в кеше
-            _logger.Info(string.Format("выбрано для отправки документов {0}", filteredDocs.Count));
+            _logger.Info(string.Format("выбрано для подписания документов {0}", filteredDocs.Count));
             if (filteredDocs.Count == 0) throw new ContinueException("не найдены документы для отправки");
             return filteredDocs;
         }
