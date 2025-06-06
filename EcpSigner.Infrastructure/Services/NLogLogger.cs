@@ -4,9 +4,9 @@ namespace EcpSigner.Infrastructure.Services
 {
     public class NLogLogger: ILogger
     {
-        private readonly NLog.Logger _logger;
+        private readonly NLog.ILogger _logger;
 
-        public NLogLogger(NLog.Logger logger)
+        public NLogLogger(NLog.ILogger logger)
         {
             _logger = logger;
         }
