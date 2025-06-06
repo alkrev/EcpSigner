@@ -60,7 +60,8 @@ namespace EcpSigner.Infrastructure.Factories
         public ICacheService CreateCacheService()
         {
             var config = CreateConfigurationProvider();
-            var cache = _cacheFactory.Create(config.Get().cacheMinutes);
+            var dateTimeProvider = _dateTimeProviderFactory.Create();
+            var cache = _cacheFactory.Create(config.Get().cacheMinutes, dateTimeProvider);
             return new CacheService(cache);
         }
         public IDatesService CreateDatesService(string[] args)
