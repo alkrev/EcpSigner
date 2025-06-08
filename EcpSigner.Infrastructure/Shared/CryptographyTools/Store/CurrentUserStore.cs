@@ -34,28 +34,6 @@ namespace CryptographyTools.Store
             }
         }
         /// <summary>
-        /// Получение сертификата по отпечатку
-        /// </summary>
-        /// <param name="thumbprint"></param>
-        /// <returns>Возвращает сертификат или null если сертификат не найден</returns>
-        public ICertificate GetCertificateByThumbprint(string thumbprint)
-        {
-            if (string.IsNullOrWhiteSpace(thumbprint))
-                throw new ArgumentException("отпечаток не может быть пустым");
-            try
-            {
-                oStore.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
-                CAPICOM.ICertificates2 certificates = (CAPICOM.ICertificates2)oStore.Certificates;
-                certificates = certificates.Find(CAPICOM.CAPICOM_CERTIFICATE_FIND_TYPE.CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint, true);
-
-                return certificates.Count > 0 ? (ICertificate) new CertificateAdapter(certificates[0]) : null;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("GetCertificateByThumbprint: " + ex.Message ?? "ошибка");
-            }
-        }
-        /// <summary>
         /// Усвобождаем неуправляемые ресурсы
         /// </summary>
         ~CurrentUserStore()
