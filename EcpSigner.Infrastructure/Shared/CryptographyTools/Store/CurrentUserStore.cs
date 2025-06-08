@@ -48,7 +48,7 @@ namespace CryptographyTools.Store
                 CAPICOM.ICertificates2 certificates = (CAPICOM.ICertificates2)oStore.Certificates;
                 certificates = certificates.Find(CAPICOM.CAPICOM_CERTIFICATE_FIND_TYPE.CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint, true);
 
-                return certificates.Count > 0 ? (ICertificate)certificates[0] : null;
+                return certificates.Count > 0 ? (ICertificate) new CertificateAdapter(certificates[0]) : null;
             }
             catch (Exception ex)
             {
