@@ -24,7 +24,7 @@ namespace CryptographyTools.Store
                 oStore.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
                 foreach (CAPICOM.ICertificate oCert in oStore.Certificates)
                 {
-                    certs[oCert.Thumbprint] = (ICertificate)new CertificateAdapter(oCert);
+                    certs[oCert.Thumbprint] = (ICertificate) new CertificateAdapter(oCert);
                 }
                 return certs;
             }
