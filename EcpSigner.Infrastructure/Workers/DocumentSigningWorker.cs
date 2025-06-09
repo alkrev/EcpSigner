@@ -37,7 +37,7 @@ namespace EcpSigner.Infrastructure.Workers
             }
             catch (Exception ex)
             {
-                _logger.Debug($"остановка: {ex.Message ?? "необработанное исключение"}");
+                _logger.Debug($"остановка: {ex.Message}");
             }
             _logger.Info("работа завершена");
         }
