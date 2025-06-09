@@ -7,12 +7,12 @@ namespace CryptographyTools.Signing.CryptoPro
 {
     public class Crypto: ISigning
     {
-        private readonly CPSigner cPSigner;
-        private readonly CadesSignedData cadesSignedData;
-        public Crypto()
+        private readonly ICPSigner6 _signer;
+        private readonly ICPSignedData5 _signedData;
+        public Crypto(ICPSigner6 signer, ICPSignedData5 signedData)
         {
-            cPSigner = new CPSigner();
-            cadesSignedData = new CadesSignedData();
+            _signer = signer;
+            _signedData = signedData;
         }
         /// <summary>
         /// Вычисляем подпись
@@ -24,11 +24,11 @@ namespace CryptographyTools.Signing.CryptoPro
         {
             try
             {
-                cPSigner.Certificate = certificate;
-                cPSigner.Options = CAPICOM.CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN;
-                cadesSignedData.ContentEncoding = CADESCOM_CONTENT_ENCODING_TYPE.CADESCOM_BASE64_TO_BINARY;
-                cadesSignedData.Content = docBase64;
-                string signatureBase64 = cadesSignedData.SignCades(cPSigner, CADESCOM_CADES_TYPE.CADESCOM_CADES_BES, true, CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64);
+                _signer.Certificate = certificate;
+                _signer.Options = CAPICOM.CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN;
+                _signedData.ContentEncoding = CADESCOM_CONTENT_ENCODING_TYPE.CADESCOM_BASE64_TO_BINARY;
+                _signedData.Content = docBase64;
+                string signatureBase64 = _signedData.SignCades(_signer, CADESCOM_CADES_TYPE.CADESCOM_CADES_BES, true, CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64);
                 return signatureBase64;
             }
             catch (Exception ex)
@@ -41,13 +41,13 @@ namespace CryptographyTools.Signing.CryptoPro
         /// </summary>
         ~Crypto()
         {
-            if (cPSigner != null)
+            if (_signer != null)
             {
-                Marshal.ReleaseComObject(cPSigner);
+                Marshal.ReleaseComObject(_signer);
             }
-            if (cadesSignedData != null)
+            if (_signedData != null)
             {
-                Marshal.ReleaseComObject(cadesSignedData);
+                Marshal.ReleaseComObject(_signedData);
             }
         }
     }
