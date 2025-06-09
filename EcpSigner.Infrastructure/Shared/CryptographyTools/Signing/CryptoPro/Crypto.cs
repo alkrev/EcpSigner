@@ -41,11 +41,11 @@ namespace CryptographyTools.Signing.CryptoPro
         /// </summary>
         ~Crypto()
         {
-            if (_signer != null)
+            if (_signer != null && Marshal.IsComObject(_signer))
             {
                 Marshal.ReleaseComObject(_signer);
             }
-            if (_signedData != null)
+            if (_signedData != null && Marshal.IsComObject(_signedData))
             {
                 Marshal.ReleaseComObject(_signedData);
             }

@@ -38,7 +38,7 @@ namespace CryptographyTools.Store
         /// </summary>
         ~CurrentUserStore()
         {
-            if (_store != null)
+            if (_store != null && Marshal.IsComObject(_store))
             {
                 Marshal.ReleaseComObject(_store);
             }
