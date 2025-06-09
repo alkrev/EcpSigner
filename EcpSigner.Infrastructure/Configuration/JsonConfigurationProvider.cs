@@ -91,7 +91,7 @@ namespace EcpSigner.Infrastructure.Configuration
                 s.cacheMinutes = 360;
                 _logger.Warn($"cacheMinutes задан некорректно. Установлено cacheMinutes={s.cacheMinutes}");
             }
-            if (s.signingIntervalSeconds < 1 || s.signingIntervalSeconds > 60)
+            if (s.signingIntervalSeconds < 1)
             {
                 s.signingIntervalSeconds = 1;
                 _logger.Warn($"signingIntervalSeconds задан некорректно. Установлено signingIntervalSeconds={s.signingIntervalSeconds}");
