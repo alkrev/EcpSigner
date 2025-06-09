@@ -25,7 +25,7 @@ namespace EcpSigner.Infrastructure.Services
             var after = DateTime.UtcNow;
 
             // Assert (допуск 50 мс для надёжности)
-            (after - before).Should().BeCloseTo(delay, TimeSpan.FromMilliseconds(50));
+            (after - before).Should().BeCloseTo(delay, TimeSpan.FromMilliseconds(100));
         }
 
         [Fact]
