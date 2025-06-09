@@ -100,7 +100,7 @@ namespace EcpSigner.Infrastructure.Configuration
                 url = "http://example.com",
                 pauseMinutes = 0,           // invalid
                 cacheMinutes = 0,           // invalid
-                signingIntervalSeconds = 100, // invalid
+                signingIntervalSeconds = 0, // invalid
                 ignoreDocTypes = new List<string>()
             };
             WriteSettingsToFile(settings);
