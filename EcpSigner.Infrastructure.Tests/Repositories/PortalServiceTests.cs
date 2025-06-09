@@ -86,6 +86,16 @@ namespace EcpSigner.Infrastructure.Repositories
         }
 
         [Fact]
+        public async Task SearchDocuments_Should_ThrowStopWorkException_When_CancellationRequested()
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken(canceled: true);
+
+            Func<Task> act = async () => await _sut.SearchDocuments("2020-01-01", "2020-01-31", cancellationToken);
+
+            await act.Should().ThrowAsync<StopWorkException>();
+        }
+        [Fact]
         public async Task LoadEcpCertificates_Should_ConvertCertificatesCorrectly()
         {
             var certReply = new loadEMDCertificateListReply
