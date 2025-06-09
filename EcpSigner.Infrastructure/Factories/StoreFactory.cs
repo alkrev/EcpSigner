@@ -6,7 +6,8 @@ namespace EcpSigner.Infrastructure.Factories
     {
         public ICurrentUserStore Create()
         {
-            return new CurrentUserStore();
+            var store = new CAPICOM.Store();
+            return new CurrentUserStore(store);
         }
     }
 }
