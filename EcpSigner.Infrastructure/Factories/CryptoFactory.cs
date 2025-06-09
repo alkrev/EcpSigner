@@ -1,4 +1,6 @@
-﻿using CryptographyTools.Signing;
+﻿using CAdESCOM;
+using CAPICOM;
+using CryptographyTools.Signing;
 using CryptographyTools.Signing.CryptoPro;
 
 namespace EcpSigner.Infrastructure.Factories
@@ -7,7 +9,9 @@ namespace EcpSigner.Infrastructure.Factories
     {
         public ISigning Create()
         {
-            return new Crypto();
+            var signer = new CPSigner();
+            var signedData = new CadesSignedData();
+            return new Crypto(signer, signedData);
         }
     }
 }
