@@ -8,10 +8,10 @@ namespace CryptographyTools.Store
 {
     public class CurrentUserStore: ICurrentUserStore
     {
-        private readonly CAPICOM.Store oStore;
-        public CurrentUserStore()
+        private readonly CAPICOM.IStore3 _store;
+        public CurrentUserStore(CAPICOM.IStore3 store)
         {
-            oStore = new CAPICOM.Store();
+            _store = store;
         }
         /// <summary>
         /// Возвращает список валидных сертификатов пользователя
@@ -21,8 +21,8 @@ namespace CryptographyTools.Store
             Dictionary<string, ICertificate> certs = new Dictionary<string, ICertificate>();
             try
             {
-                oStore.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
-                foreach (CAPICOM.ICertificate oCert in oStore.Certificates)
+                _store.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
+                foreach (CAPICOM.ICertificate oCert in _store.Certificates)
                 {
                     certs[oCert.Thumbprint] = (ICertificate) new CertificateAdapter(oCert);
                 }
@@ -38,9 +38,9 @@ namespace CryptographyTools.Store
         /// </summary>
         ~CurrentUserStore()
         {
-            if (oStore != null)
+            if (_store != null)
             {
-                Marshal.ReleaseComObject(oStore);
+                Marshal.ReleaseComObject(_store);
             }
         }
     }
