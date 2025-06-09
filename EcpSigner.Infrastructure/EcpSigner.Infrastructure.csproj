@@ -107,6 +107,8 @@
     <Compile Include="Services\DelayProvider.cs" />
     <Compile Include="Services\FlashWindowService.cs" />
     <Compile Include="Services\NLogLogger.cs" />
+    <Compile Include="Shared\WindowsTools\FlashWindowNative.cs" />
+    <Compile Include="Shared\WindowsTools\IFlashWindowNative.cs" />
     <Compile Include="WebClients\WebClient.cs" />
     <Compile Include="Shared\WindowsTools\FlashWindow.cs" />
     <Compile Include="Shared\WindowsTools\IFlashWindow.cs" />

@@ -7,7 +7,8 @@ namespace EcpSigner.Infrastructure.Factories
     {
         public IFlashWindow Create()
         {
-            return new FlashWindow(Process.GetCurrentProcess().MainWindowHandle);
+            var native = new FlashWindowNative();
+            return new FlashWindow(Process.GetCurrentProcess().MainWindowHandle, native);
         }
     }
 }
