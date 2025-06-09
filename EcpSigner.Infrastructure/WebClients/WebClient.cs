@@ -1,13 +1,8 @@
-﻿using EcpSigner.Domain.Exceptions;
-using EcpSigner.Domain.Interfaces;
-using EcpSigner.Domain.Models;
+﻿using Ecp.Web;
+using EcpSigner.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Ecp.Web;
 
 namespace EcpSigner.Infrastructure.WebClients
 {
@@ -24,7 +19,7 @@ namespace EcpSigner.Infrastructure.WebClients
             {
                 return await _wc.PostJson<T>(url, parameters, referer);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw new ContinueExceptionWithError(ex.Message);
             }
