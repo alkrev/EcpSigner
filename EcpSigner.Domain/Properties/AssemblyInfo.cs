@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные со сборкой.
-[assembly: AssemblyTitle("EcpSigner.Domain")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("EcpSigner.Domain library")]
+[assembly: AssemblyDescription("Утилита для автоматического подписания документов от имени МО")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EcpSigner.Domain")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyProduct("EcpSigner")]
+[assembly: AssemblyCopyright("Copyright © 2025 Krylov Alexander")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
