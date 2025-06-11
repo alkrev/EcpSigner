@@ -1,6 +1,4 @@
 ﻿using EcpSigner.Infrastructure.Factories;
-using EcpSigner.Infrastructure.Services;
-using System;
 
 namespace EcpSigner
 {
@@ -11,7 +9,8 @@ namespace EcpSigner
         /// </summary>
         public static void Main(string[] args)
         {
-            new Bootstrapper().Run(args);
+            var runnerFactory = new ProgramRunnerFactory();
+            new Bootstrapper(runnerFactory).Run(args);
         }
     }
 }

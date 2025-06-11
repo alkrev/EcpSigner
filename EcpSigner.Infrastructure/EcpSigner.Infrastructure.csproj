@@ -83,8 +83,12 @@
     <Compile Include="Factories\ICryptoFactory.cs" />
     <Compile Include="Factories\IFlashWindowFactory.cs" />
     <Compile Include="Factories\InfrastructureFactory.cs" />
+    <Compile Include="Factories\IProgramRunner.cs" />
+    <Compile Include="Factories\IProgramRunnerFactory.cs" />
     <Compile Include="Factories\IStoreFactory.cs" />
     <Compile Include="Factories\IWebClientFactory.cs" />
+    <Compile Include="Factories\ProgramRunner.cs" />
+    <Compile Include="Factories\ProgramRunnerFactory.cs" />
     <Compile Include="Factories\StoreFactory.cs" />
     <Compile Include="Factories\WebClientFactory.cs" />
     <Compile Include="Services\ConsoleCancellationService .cs" />

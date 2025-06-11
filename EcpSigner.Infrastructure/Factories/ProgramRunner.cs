@@ -3,11 +3,14 @@ using EcpSigner.Application.Interfaces;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Infrastructure.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace EcpSigner
+namespace EcpSigner.Infrastructure.Factories
 {
-    public class ProgramRunner: IProgramRunner
+    public class ProgramRunner : IProgramRunner
     {
         private readonly ILogger _logger;
         private readonly IWorkerFactory _workerFactory;
