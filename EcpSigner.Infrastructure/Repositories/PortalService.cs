@@ -1,10 +1,11 @@
 ﻿using Ecp.Portal;
-using EcpSigner.Domain.Interfaces;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EcpSigner.Domain.Models;
-using System.Threading;
+using Ecp.Web;
 using EcpSigner.Domain.Exceptions;
+using EcpSigner.Domain.Interfaces;
+using EcpSigner.Domain.Models;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EcpSigner.Infrastructure.Repositories
 {
@@ -57,7 +58,7 @@ namespace EcpSigner.Infrastructure.Repositories
                     page += 1;
                 }
             }
-            catch (NotLoggedInException ex)
+            catch (DeserializeException ex)
             {
                 throw new IsNotLoggedInException(ex.Message);
             }
@@ -125,7 +126,7 @@ namespace EcpSigner.Infrastructure.Repositories
                     throw new DocumentSigningException(err);
                 }
             }
-            catch (NotLoggedInException ex)
+            catch (DeserializeException ex)
             {
                 throw new IsNotLoggedInException(ex.Message);
             }
@@ -149,7 +150,7 @@ namespace EcpSigner.Infrastructure.Repositories
                     throw new DocumentSigningException("GetSignData: toSign.Length = 0");
                 }
             }
-            catch (NotLoggedInException ex)
+            catch (DeserializeException ex)
             {
                 throw new IsNotLoggedInException(ex.Message);
             }
@@ -168,7 +169,7 @@ namespace EcpSigner.Infrastructure.Repositories
                     throw new DocumentSigningException(err);
                 }
             }
-            catch (NotLoggedInException ex)
+            catch (DeserializeException ex)
             {
                 throw new IsNotLoggedInException(ex.Message);
             }

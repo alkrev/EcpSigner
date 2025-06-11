@@ -1,14 +1,15 @@
-﻿using Xunit;
-using Moq;
-using FluentAssertions;
+﻿using Ecp.Portal;
+using Ecp.Web;
+using EcpSigner.Domain.Exceptions;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
 using EcpSigner.Infrastructure.Repositories;
-using EcpSigner.Domain.Exceptions;
-using Ecp.Portal;
+using FluentAssertions;
+using Moq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 
 namespace EcpSigner.Infrastructure.Repositories
@@ -74,10 +75,10 @@ namespace EcpSigner.Infrastructure.Repositories
         }
 
         [Fact]
-        public async Task SearchDocuments_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        public async Task SearchDocuments_Should_ThrowIsNotLoggedInException_When_DeserializeExceptionThrown()
         {
             _emdMock.Setup(e => e.loadEMDSignBundleWindow(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                    .ThrowsAsync(new NotLoggedInException("Not logged in"));
+                    .ThrowsAsync(new DeserializeException("Not logged in"));
 
             Func<Task> act = async () => await _sut.SearchDocuments("2020-01-01", "2020-01-31", CancellationToken.None);
 
@@ -229,10 +230,10 @@ namespace EcpSigner.Infrastructure.Repositories
             await act.Should().NotThrowAsync();
         }
         [Fact]
-        public async Task GetSignData_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        public async Task GetSignData_Should_ThrowIsNotLoggedInException_When_DeserializeExceptionThrown()
         {
             _emdMock.Setup(e => e.getEMDVersionSignData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                    .ThrowsAsync(new NotLoggedInException("Session expired"));
+                    .ThrowsAsync(new DeserializeException("Json error"));
 
             var doc = new Document { Type = "type", ID = "id", VersionNumber = 1 };
             var cert = new EcpCertificate { ID = "cert1" };
@@ -240,13 +241,13 @@ namespace EcpSigner.Infrastructure.Repositories
             Func<Task> act = async () => await _sut.GetSignData(doc, cert, "doc");
 
             await act.Should().ThrowAsync<IsNotLoggedInException>()
-                     .WithMessage("Session expired");
+                     .WithMessage("Json error");
         }
         [Fact]
-        public async Task CheckBeforeSign_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        public async Task CheckBeforeSign_Should_ThrowIsNotLoggedInException_When_DeserializeExceptionThrown()
         {
             _emdMock.Setup(e => e.checkBeforeSign(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                    .ThrowsAsync(new NotLoggedInException("Auth error"));
+                    .ThrowsAsync(new DeserializeException("Json error"));
 
             var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
             var cert = new EcpCertificate { ID = "cert1" };
@@ -254,13 +255,13 @@ namespace EcpSigner.Infrastructure.Repositories
             Func<Task> act = async () => await _sut.CheckBeforeSign(doc, cert, "doc");
 
             await act.Should().ThrowAsync<IsNotLoggedInException>()
-                     .WithMessage("Auth error");
+                     .WithMessage("Json error");
         }
         [Fact]
-        public async Task SaveSignature_Should_ThrowIsNotLoggedInException_When_NotLoggedInExceptionThrown()
+        public async Task SaveSignature_Should_ThrowIsNotLoggedInException_When_DeserializeExceptionThrown()
         {
             _emdMock.Setup(e => e.saveEMDSignatures(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                    .ThrowsAsync(new NotLoggedInException("Token expired"));
+                    .ThrowsAsync(new DeserializeException("Json error"));
 
             var doc = new Document { Type = "type", ID = "id", VersionID = "v1" };
             var cert = new EcpCertificate { ID = "cert1" };
@@ -268,7 +269,7 @@ namespace EcpSigner.Infrastructure.Repositories
             Func<Task> act = async () => await _sut.SaveSignature(doc, "hash", "sig", cert, "doc");
 
             await act.Should().ThrowAsync<IsNotLoggedInException>()
-                     .WithMessage("Token expired");
+                     .WithMessage("Json error");
         }
     }
 }
