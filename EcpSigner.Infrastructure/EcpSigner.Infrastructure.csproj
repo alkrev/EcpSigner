@@ -49,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EcpClient, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EcpClient.0.0.2\lib\net472\EcpClient.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -122,10 +125,6 @@
     <ProjectReference Include="..\EcpSigner.Domain\EcpSigner.Domain.csproj">
       <Project>{58692A3D-C079-400F-B4D1-F93A362AA199}</Project>
       <Name>EcpSigner.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ecp\Ecp.csproj">
-      <Project>{dcbe9f36-0da1-4013-a970-96527a439593}</Project>
-      <Name>Ecp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

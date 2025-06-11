@@ -118,10 +118,6 @@
       <Project>{5a57ff9a-0022-4554-8e0c-7a00ebb01390}</Project>
       <Name>EcpSigner.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ecp\Ecp.csproj">
-      <Project>{dcbe9f36-0da1-4013-a970-96527a439593}</Project>
-      <Name>Ecp</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
