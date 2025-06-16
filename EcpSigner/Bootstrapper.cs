@@ -1,5 +1,5 @@
-﻿using EcpSigner.Infrastructure.Factories;
-using EcpSigner.Infrastructure.Services;
+﻿using EcpSigner.Domain.Interfaces;
+using EcpSigner.Infrastructure.Factories;
 using System;
 
 namespace EcpSigner
@@ -7,24 +7,25 @@ namespace EcpSigner
     public class Bootstrapper
     {
         private readonly IProgramRunnerFactory _runnerFactory;
+        private readonly ILogger _logger;
 
-        public Bootstrapper(IProgramRunnerFactory runnerFactory)
+        public Bootstrapper(IProgramRunnerFactory runnerFactory, ILogger logger)
         {
             _runnerFactory = runnerFactory;
+            _logger = logger;
         }
 
         public void Run(string[] args)
         {
             var configPath = "config.json";
-            var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
             try
             {
-                var _runner = _runnerFactory.Create(configPath, logger);
+                var _runner = _runnerFactory.Create(configPath, _logger);
                 _runner.RunAsync(args).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                logger.Fatal($"Bootstrapper.Run: {ex.Message}");
+                _logger.Fatal($"Bootstrapper.Run: {ex.Message}");
             }
             finally
             {
