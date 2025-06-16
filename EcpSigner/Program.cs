@@ -1,5 +1,6 @@
 ﻿using EcpSigner.Infrastructure.Factories;
 using EcpSigner.Infrastructure.Services;
+using System;
 
 namespace EcpSigner
 {
@@ -11,8 +12,19 @@ namespace EcpSigner
         public static void Main(string[] args)
         {
             var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
-            var runnerFactory = new ProgramRunnerFactory();
-            new Bootstrapper(runnerFactory, logger).Run(args);
+            try
+            {
+                var runnerFactory = new ProgramRunnerFactory();
+                new Bootstrapper(runnerFactory, logger).Run(args);
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal($"Main: {ex.Message}");
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
     }
 }

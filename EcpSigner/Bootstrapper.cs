@@ -27,10 +27,6 @@ namespace EcpSigner
             {
                 _logger.Fatal($"Bootstrapper.Run: {ex.Message}");
             }
-            finally
-            {
-                NLog.LogManager.Shutdown();
-            }
         }
     }
 }
