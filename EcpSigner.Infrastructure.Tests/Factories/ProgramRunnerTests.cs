@@ -3,7 +3,7 @@ using EcpSigner.Domain.Interfaces;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Moq;
 
-namespace EcpSigner
+namespace EcpSigner.Infrastructure.Factories
 {
     public class ProgramRunnerTests
     {
@@ -41,11 +41,15 @@ namespace EcpSigner
             var loggerMock = new Mock<ILogger>();
             var workerMock = new Mock<IJob>();
             var factoryMock = new Mock<IWorkerFactory>();
+            var cancellationService = new Mock<ICancellationService>();
 
             factoryMock.Setup(f => f.CreateWorker(It.IsAny<string[]>()))
                        .Returns(workerMock.Object);
 
-            var runner = new ProgramRunner(loggerMock.Object, factoryMock.Object);
+            cancellationService.Setup(f => f.Token)
+                       .Returns(new CancellationToken(false));
+
+            var runner = new ProgramRunner(loggerMock.Object, factoryMock.Object, cancellationService.Object);
             var args = new[] { "test" };
 
             // Act
