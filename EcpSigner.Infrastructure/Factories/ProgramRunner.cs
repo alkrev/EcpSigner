@@ -16,11 +16,11 @@ namespace EcpSigner.Infrastructure.Factories
         private readonly IWorkerFactory _workerFactory;
         private readonly ICancellationService _cancellationService;
 
-        public ProgramRunner(ILogger logger, IWorkerFactory workerFactory, ICancellationService cancellationService = null)
+        public ProgramRunner(ILogger logger, IWorkerFactory workerFactory, ICancellationService cancellationService)
         {
             _logger = logger;
             _workerFactory = workerFactory;
-            _cancellationService = cancellationService ?? new ConsoleCancellationService(logger, new ConsoleWrapper());
+            _cancellationService = cancellationService;
         }
 
         public async Task RunAsync(string[] args)
@@ -34,7 +34,7 @@ namespace EcpSigner.Infrastructure.Factories
             }
             catch (Exception ex)
             {
-                _logger.Fatal($"RunAsync: {ex.Message}");
+                _logger.Fatal($"ProgramRunner.RunAsync: {ex.Message}");
             }
         }
     }

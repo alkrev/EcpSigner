@@ -24,7 +24,7 @@ namespace EcpSigner
             }
             catch (Exception ex)
             {
-                logger.Fatal($"Program.Run: {ex.Message}");
+                logger.Fatal($"Bootstrapper.Run: {ex.Message}");
             }
             finally
             {

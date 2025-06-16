@@ -1,4 +1,6 @@
-﻿using EcpSigner.Domain.Interfaces;
+﻿using ConsoleTools;
+using EcpSigner.Domain.Interfaces;
+using EcpSigner.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,8 @@ namespace EcpSigner.Infrastructure.Factories
             );
 
             var workerFactory = new DefaultWorkerFactory(logger, infrastructureFactory);
-            return new ProgramRunner(logger, workerFactory);
+            var cancellationService = new ConsoleCancellationService(logger, new ConsoleWrapper());
+            return new ProgramRunner(logger, workerFactory, cancellationService);
         }
     }
 }
