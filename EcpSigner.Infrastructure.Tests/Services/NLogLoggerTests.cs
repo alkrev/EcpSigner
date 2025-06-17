@@ -90,5 +90,15 @@ namespace EcpSigner.Infrastructure.Services
             // Assert
             act.Should().NotThrow(); // Проверяем, что метод не выбрасывает исключение
         }
+
+        [Fact]
+        public void Shutdown_ShouldNotThrow()
+        {
+            // Act
+            var act = () => _nlogLogger.Shutdown();
+
+            // Assert
+            act.Should().NotThrow(); // Проверяем, что метод не выбрасывает исключение
+        }
     }
 }
