@@ -11,19 +11,15 @@ namespace EcpSigner
         /// </summary>
         public static void Main(string[] args)
         {
-            var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
             try
             {
                 var runnerFactory = new ProgramRunnerFactory();
-                new Bootstrapper(runnerFactory, logger).Run(args);
+                var bootstrapper = new Bootstrapper(runnerFactory);
+                new AppEntryPoint(bootstrapper).Run(args);
             }
             catch (Exception ex)
             {
-                logger.Fatal($"Main: {ex.Message}");
-            }
-            finally
-            {
-                NLog.LogManager.Shutdown();
+                Console.WriteLine($"Main: {ex.Message}");
             }
         }
     }

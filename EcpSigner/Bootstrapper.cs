@@ -4,28 +4,26 @@ using System;
 
 namespace EcpSigner
 {
-    public class Bootstrapper
+    public class Bootstrapper: IBootstrapper
     {
         private readonly IProgramRunnerFactory _runnerFactory;
-        private readonly ILogger _logger;
 
-        public Bootstrapper(IProgramRunnerFactory runnerFactory, ILogger logger)
+        public Bootstrapper(IProgramRunnerFactory runnerFactory)
         {
             _runnerFactory = runnerFactory;
-            _logger = logger;
         }
 
-        public void Run(string[] args)
+        public void Run(string[] args, ILogger logger)
         {
             var configPath = "config.json";
             try
             {
-                var _runner = _runnerFactory.Create(configPath, _logger);
+                var _runner = _runnerFactory.Create(configPath, logger);
                 _runner.RunAsync(args).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                _logger.Fatal($"Bootstrapper.Run: {ex.Message}");
+                logger.Fatal($"Bootstrapper.Run: {ex.Message}");
             }
         }
     }
