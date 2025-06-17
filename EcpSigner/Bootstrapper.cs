@@ -4,7 +4,7 @@ using System;
 
 namespace EcpSigner
 {
-    public class Bootstrapper: IBootstrapper
+    public class Bootstrapper : IBootstrapper
     {
         private readonly IProgramRunnerFactory _runnerFactory;
 
