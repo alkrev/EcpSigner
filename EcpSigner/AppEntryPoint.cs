@@ -1,4 +1,6 @@
-﻿using EcpSigner.Infrastructure.Services;
+﻿using EcpSigner.Domain.Interfaces;
+using EcpSigner.Infrastructure.Factories;
+using EcpSigner.Infrastructure.Services;
 using System;
 
 namespace EcpSigner
@@ -6,15 +8,17 @@ namespace EcpSigner
     public class AppEntryPoint
     {
         private readonly IBootstrapper _bootstrapper;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public AppEntryPoint(IBootstrapper bootstrapper)
+        public AppEntryPoint(IBootstrapper bootstrapper, ILoggerFactory loggerFactory)
         {
             _bootstrapper = bootstrapper;
+            _loggerFactory = loggerFactory;
         }
 
         public void Run(string[] args)
         {
-            var logger = new NLogLogger(NLog.LogManager.GetLogger("EcpSigner"));
+            var logger = _loggerFactory.Create("EcpSigner");
             try
             {
                 _bootstrapper.Run(args, logger);
@@ -25,7 +29,7 @@ namespace EcpSigner
             }
             finally
             {
-                NLog.LogManager.Shutdown();
+                logger.Shutdown();
             }
         }
     }

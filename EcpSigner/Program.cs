@@ -14,7 +14,8 @@ namespace EcpSigner
             {
                 var runnerFactory = new ProgramRunnerFactory();
                 var bootstrapper = new Bootstrapper(runnerFactory);
-                new AppEntryPoint(bootstrapper).Run(args);
+                var loggerFactory = new LoggerFactory();
+                new AppEntryPoint(bootstrapper, loggerFactory).Run(args);
             }
             catch (Exception ex)
             {
