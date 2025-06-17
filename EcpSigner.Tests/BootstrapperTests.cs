@@ -12,51 +12,64 @@ namespace EcpSigner
     public class BootstrapperTests
     {
         [Fact]
-        public void Run_ShouldCallRunnerRunAsync_WhenNoExceptionOccurs()
+        public void Run_ShouldCallRunnerRunAsync_WhenNoExceptionThrown()
         {
             // Arrange
             var args = new[] { "arg1", "arg2" };
+            var loggerMock = new Mock<ILogger>();
             var runnerMock = new Mock<IProgramRunner>();
             runnerMock.Setup(r => r.RunAsync(args)).Returns(Task.CompletedTask);
 
             var factoryMock = new Mock<IProgramRunnerFactory>();
-            factoryMock.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<ILogger>()))
-                       .Returns(runnerMock.Object);
+            factoryMock
+                .Setup(f => f.Create("config.json", loggerMock.Object))
+                .Returns(runnerMock.Object);
 
-            var loggerMock = new Mock<ILogger>();
-
-            var bootstrapper = new Bootstrapper(factoryMock.Object, loggerMock.Object);
+            var bootstrapper = new Bootstrapper(factoryMock.Object);
 
             // Act
-            bootstrapper.Run(args);
+            bootstrapper.Run(args, loggerMock.Object);
 
             // Assert
-            factoryMock.Verify(f => f.Create("config.json", It.IsAny<ILogger>()), Times.Once);
+            factoryMock.Verify(f => f.Create("config.json", loggerMock.Object), Times.Once);
             runnerMock.Verify(r => r.RunAsync(args), Times.Once);
+            loggerMock.Verify(l => l.Fatal(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
-        public void Run_ShouldLogFatal_WhenRunnerThrowsException()
+        public void Run_ShouldLogFatal_WhenExceptionIsThrown()
         {
             // Arrange
-            var args = new[] { "arg1" };
-            var exception = new InvalidOperationException("test exception");
-
-            var runnerMock = new Mock<IProgramRunner>();
-            runnerMock.Setup(r => r.RunAsync(args)).ThrowsAsync(exception);
-
+            var args = new[] { "arg1", "arg2" };
             var loggerMock = new Mock<ILogger>();
-            var factoryMock = new Mock<IProgramRunnerFactory>();
-            factoryMock.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<ILogger>()))
-                .Returns(runnerMock.Object);
+            var exception = new InvalidOperationException("Something went wrong");
 
-            var bootstrapper = new Bootstrapper(factoryMock.Object, loggerMock.Object);
+            var factoryMock = new Mock<IProgramRunnerFactory>();
+            factoryMock
+                .Setup(f => f.Create("config.json", loggerMock.Object))
+                .Throws(exception);
+
+            var bootstrapper = new Bootstrapper(factoryMock.Object);
 
             // Act
-            bootstrapper.Run(args);
+            bootstrapper.Run(args, loggerMock.Object);
 
             // Assert
-            loggerMock.Verify(l => l.Fatal(It.Is<string>(s => s.Contains("Bootstrapper.Run") && s.Contains("test exception"))), Times.Once);
+            factoryMock.Verify(f => f.Create("config.json", loggerMock.Object), Times.Once);
+            loggerMock.Verify(l => l.Fatal($"Bootstrapper.Run: {exception.Message}"), Times.Once);
+        }
+
+        [Fact]
+        public void Constructor_ShouldStoreFactory()
+        {
+            // Arrange
+            var factoryMock = new Mock<IProgramRunnerFactory>();
+
+            // Act
+            var bootstrapper = new Bootstrapper(factoryMock.Object);
+
+            // Assert
+            bootstrapper.Should().NotBeNull();
         }
     }
 }
