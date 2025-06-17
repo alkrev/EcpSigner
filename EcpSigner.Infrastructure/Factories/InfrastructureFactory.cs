@@ -27,7 +27,7 @@ namespace EcpSigner.Infrastructure.Factories
             ICacheFactory cacheFactory,
             IFlashWindowFactory flashWindowFactory,
             IDateTimeProviderFactory dateTimeProviderFactory
-        ) 
+        )
         {
             _logger = logger;
             _configurationFactory = configurationFactory;

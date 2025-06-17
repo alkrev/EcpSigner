@@ -4,7 +4,7 @@ using EcpSigner.Infrastructure.Services;
 
 namespace EcpSigner.Infrastructure.Factories
 {
-    public class ProgramRunnerFactory: IProgramRunnerFactory
+    public class ProgramRunnerFactory : IProgramRunnerFactory
     {
         public IProgramRunner Create(string configPath, ILogger logger)
         {

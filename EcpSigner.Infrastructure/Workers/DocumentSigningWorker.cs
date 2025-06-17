@@ -1,12 +1,12 @@
-﻿using System;
+﻿using EcpSigner.Application.Interfaces;
+using EcpSigner.Domain.Interfaces;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EcpSigner.Domain.Interfaces;
-using EcpSigner.Application.Interfaces;
 
 namespace EcpSigner.Infrastructure.Workers
 {
-    public class DocumentSigningWorker: IJob
+    public class DocumentSigningWorker : IJob
     {
         private readonly IJob _job;
         private readonly ILogger _logger;

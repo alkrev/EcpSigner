@@ -7,7 +7,7 @@ namespace EcpSigner.Infrastructure.Services
     {
         private readonly string[] args;
         private readonly IDateTimeProvider _dateTimeProvider;
-        public DatesService (string[] _args, IDateTimeProvider dateTimeProvider)
+        public DatesService(string[] _args, IDateTimeProvider dateTimeProvider)
         {
             args = _args;
             _dateTimeProvider = dateTimeProvider;

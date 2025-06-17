@@ -7,7 +7,7 @@ namespace EcpSigner.Infrastructure.Factories
     {
         private readonly ILogger _logger;
         private readonly string _configPath;
-        public ConfigurationProviderFactory(ILogger logger, string configPath) 
+        public ConfigurationProviderFactory(ILogger logger, string configPath)
         {
             _logger = logger;
             _configPath = configPath;

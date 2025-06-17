@@ -1,11 +1,10 @@
 ﻿using CAdESCOM;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace CryptographyTools.Signing.CryptoPro
 {
-    public class Crypto: ISigning
+    public class Crypto : ISigning
     {
         private readonly ICPSigner6 _signer;
         private readonly ICPSignedData5 _signedData;

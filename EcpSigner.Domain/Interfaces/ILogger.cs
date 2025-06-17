@@ -14,5 +14,6 @@ namespace EcpSigner.Domain.Interfaces
         void Warn(string message);
         void Error(string message);
         void Fatal(string message);
+        void Shutdown();
     }
 }

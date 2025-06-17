@@ -2,7 +2,7 @@
 
 namespace EcpSigner.Infrastructure.Services
 {
-    public class NLogLogger: ILogger
+    public class NLogLogger : ILogger
     {
         private readonly NLog.ILogger _logger;
 
@@ -16,5 +16,6 @@ namespace EcpSigner.Infrastructure.Services
         public void Error(string message) => _logger.Error(message);
         public void Warn(string message) => _logger.Warn(message);
         public void Fatal(string message) => _logger.Fatal(message);
+        public void Shutdown() => NLog.LogManager.Shutdown();
     }
 }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace CryptographyTools.Store
 {
-    public class CurrentUserStore: ICurrentUserStore
+    public class CurrentUserStore : ICurrentUserStore
     {
         private readonly CAPICOM.IStore3 _store;
         public CurrentUserStore(CAPICOM.IStore3 store)
@@ -24,7 +24,7 @@ namespace CryptographyTools.Store
                 _store.Open(CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE);
                 foreach (CAPICOM.ICertificate oCert in _store.Certificates)
                 {
-                    certs[oCert.Thumbprint] = (ICertificate) new CertificateAdapter(oCert);
+                    certs[oCert.Thumbprint] = (ICertificate)new CertificateAdapter(oCert);
                 }
                 return certs;
             }

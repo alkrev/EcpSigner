@@ -69,6 +69,7 @@
     <Compile Include="Interfaces\IDateTimeProvider.cs" />
     <Compile Include="Interfaces\IFlashWindowService.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\ILoggerFactory.cs" />
     <Compile Include="Interfaces\IPortalService.cs" />
     <Compile Include="Interfaces\ISignatureService.cs" />
     <Compile Include="Models\AppSettings.cs" />

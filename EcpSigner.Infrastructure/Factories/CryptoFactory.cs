@@ -1,5 +1,4 @@
 ﻿using CAdESCOM;
-using CAPICOM;
 using CryptographyTools.Signing;
 using CryptographyTools.Signing.CryptoPro;
 

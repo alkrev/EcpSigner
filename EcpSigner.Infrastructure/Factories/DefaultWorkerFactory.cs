@@ -7,7 +7,7 @@ using EcpSigner.Infrastructure.Workers;
 
 namespace EcpSigner.Infrastructure.Factories
 {
-    public class DefaultWorkerFactory: IWorkerFactory
+    public class DefaultWorkerFactory : IWorkerFactory
     {
         private readonly ILogger _logger;
         private readonly IInfrastructureFactory _infraFactory;

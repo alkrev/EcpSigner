@@ -87,6 +87,7 @@
     <Compile Include="Factories\IProgramRunnerFactory.cs" />
     <Compile Include="Factories\IStoreFactory.cs" />
     <Compile Include="Factories\IWebClientFactory.cs" />
+    <Compile Include="Factories\LoggerFactory.cs" />
     <Compile Include="Factories\ProgramRunner.cs" />
     <Compile Include="Factories\ProgramRunnerFactory.cs" />
     <Compile Include="Factories\StoreFactory.cs" />
