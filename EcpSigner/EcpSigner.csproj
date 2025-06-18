@@ -90,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppEntryPoint.cs" />
-    <Compile Include="AppEntryPointTests.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Bootstrapper.cs" />
