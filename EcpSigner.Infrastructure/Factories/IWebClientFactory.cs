@@ -4,6 +4,6 @@ namespace EcpSigner.Infrastructure.Factories
 {
     public interface IWebClientFactory
     {
-        IClient Create(string url);
+        IClient Create(string url, string userAgent);
     }
 }

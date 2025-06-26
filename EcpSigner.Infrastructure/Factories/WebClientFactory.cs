@@ -5,9 +5,9 @@ namespace EcpSigner.Infrastructure.Factories
 {
     public class WebClientFactory : IWebClientFactory
     {
-        public IClient Create(string url)
+        public IClient Create(string url, string userAgent)
         {
-            return new WebClient(new Client(url));
+            return new WebClient(new Client(url, userAgent));
         }
     }
 }
