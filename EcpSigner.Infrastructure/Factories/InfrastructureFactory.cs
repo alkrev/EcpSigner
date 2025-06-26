@@ -46,7 +46,7 @@ namespace EcpSigner.Infrastructure.Factories
         public IPortalService CreatePortalService()
         {
             var config = CreateConfigurationProvider();
-            var webClient = _webClientFactory.Create(config.Get().url);
+            var webClient = _webClientFactory.Create(config.Get().url, config.Get().userAgent);
             var portalService = new PortalService(new Main(webClient), new EMD(webClient));
             return new PortalServiceDecorator(portalService, _logger);
         }

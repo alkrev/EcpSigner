@@ -59,6 +59,7 @@ namespace EcpSigner.Infrastructure.Configuration
             appSettings.cacheMinutes = s.cacheMinutes;
             appSettings.signingIntervalSeconds = s.signingIntervalSeconds;
             appSettings.ignoreDocTypesDict = s.ignoreDocTypes.ToDictionary(x => x, x => (byte)1);
+            appSettings.userAgent = s.userAgent;
             return appSettings;
         }
         /// <summary>
@@ -77,6 +78,10 @@ namespace EcpSigner.Infrastructure.Configuration
             if (string.IsNullOrEmpty(s.url))
             {
                 throw new Exception("url сайта ЕЦП не задан");
+            }
+            if (string.IsNullOrEmpty(s.userAgent))
+            {
+                throw new Exception("userAgent не задан");
             }
             if (s.pauseMinutes < 1 || s.pauseMinutes > 7 * 60 * 24)
             {

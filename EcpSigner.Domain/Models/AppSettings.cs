@@ -36,5 +36,9 @@ namespace EcpSigner.Domain.Models
         /// Список типов документов, которые будут игнорироваться
         /// </summary>
         public Dictionary<string, byte> ignoreDocTypesDict { get; set; }
+        /// <summary>
+        /// UserAgent браузера, для совместимости с ЕЦП
+        /// </summary>
+        public string userAgent { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace EcpSigner.Infrastructure.Configuration
         public int signingIntervalSeconds { get; set; }
         public List<string> ignoreDocTypes { get; set; }
         public Dictionary<string, byte> ignoreDocTypesDict { get; set; }
+        public string userAgent { get; set; }
     }
 }
