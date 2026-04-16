@@ -1,4 +1,6 @@
-﻿using EcpSigner.Domain.Interfaces;
+﻿using CAdESCOM;
+using Ecp.Portal;
+using EcpSigner.Domain.Interfaces;
 using EcpSigner.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -39,11 +41,11 @@ namespace EcpSigner.Infrastructure.Decorators
             await _inner.CheckBeforeSign(doc, ecpCert, docName);
             _logger.Debug(string.Format("проверка перед подписанием документа {0} прошла успешно", docName));
         }
-        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task<List<ToSign>> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
         {
-            (string docBase64, string hashBase64) = await _inner.GetSignData(doc, ecpCert, docName);
+            List<ToSign> tosigns = await _inner.GetSignData(doc, ecpCert, docName);
             _logger.Debug(string.Format("получение документа для подписания {0} прошло успешно", docName));
-            return (docBase64, hashBase64);
+            return tosigns;
         }
         public async Task<List<EcpCertificate>> LoadEcpCertificates()
         {
@@ -55,10 +57,10 @@ namespace EcpSigner.Infrastructure.Decorators
             _logger.Debug($"загружено сертификатов ЕЦП {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return certs;
         }
-        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
+        public async Task SaveSignature(Document doc, string VersionID, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
         {
-            await _inner.SaveSignature(doc, hashBase64, signature, ecpCert, docName);
-            _logger.Debug(string.Format("подпись документа {0} сохранена на сервере", docName));
+            await _inner.SaveSignature(doc, VersionID, hashBase64, signature, ecpCert, docName);
+            _logger.Debug(string.Format("подпись документа {0} ({1}) сохранена на сервере", docName, VersionID));
         }
     }
 }

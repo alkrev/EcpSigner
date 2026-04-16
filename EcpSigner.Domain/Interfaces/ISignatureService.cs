@@ -8,7 +8,7 @@ namespace EcpSigner.Domain.Interfaces
 {
     public interface ISignatureService
     {
-        string Sign(ICertificate certificate, string docBase64, string document);
+        string Sign(ICertificate certificate, string docBase64, string document, string versionID);
         Dictionary<string, ICertificate> GetUserCertificates();
     }
 }

@@ -1,4 +1,5 @@
-﻿using CryptographyTools.Signing;
+﻿using CAdESCOM;
+using CryptographyTools.Signing;
 using CryptographyTools.Store;
 using EcpSigner.Domain.Interfaces;
 using EcpSigner.Infrastructure.Adapters;
@@ -20,7 +21,7 @@ namespace EcpSigner.Infrastructure.Repositories
         {
             return _store.GetUserCertificates();
         }
-        public string Sign(ICertificate certificate, string docBase64, string document)
+        public string Sign(ICertificate certificate, string docBase64, string document, string versionID)
         {
             if (!(certificate is CertificateAdapter))
                 throw new ArgumentException("неверный тип сертификата");

@@ -134,7 +134,7 @@ namespace EcpSigner.Infrastructure.Repositories
         /// <summary>
         /// Получаем документ и хеш для подписания
         /// </summary>
-        public async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
+        public async Task<List<ToSign>> GetSignData(Document doc, EcpCertificate ecpCert, string docName)
         {
             getEMDVersionSignDataReply rep;
             try
@@ -154,15 +154,24 @@ namespace EcpSigner.Infrastructure.Repositories
             {
                 throw new IsNotLoggedInException(ex.Message);
             }
-            return (rep.toSign[0].docBase64, rep.toSign[0].hashBase64);
+            List<ToSign> signs = new List<ToSign>();
+            foreach (Tosign toSign in rep.toSign)
+            {
+                ToSign s = new ToSign();
+                s.EMDVersion_id = toSign.EMDVersion_id;
+                s.docBase64 = toSign.docBase64;
+                s.hashBase64 = toSign.hashBase64;
+                signs.Add(s);
+            }
+            return signs;
         }
 
-        public async Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
+        public async Task SaveSignature(Document doc, string VersionID, string hashBase64, string signature, EcpCertificate ecpCert, string docName)
         {
             saveEMDSignaturesReply rep;
             try
             {
-                rep = await _emd.saveEMDSignatures(doc.Type, doc.ID, doc.VersionID, hashBase64, signature, ecpCert.ID);
+                rep = await _emd.saveEMDSignatures(doc.Type, doc.ID, VersionID, hashBase64, signature, ecpCert.ID);
                 if (!rep.success)
                 {
                     string err = rep.Error_Msg;

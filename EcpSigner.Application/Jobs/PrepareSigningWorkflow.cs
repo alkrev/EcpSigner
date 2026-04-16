@@ -116,7 +116,7 @@ namespace EcpSigner.Application.Jobs
             {
                 try
                 {
-                    _signatureService.Sign(cert.Item2, "test", "test");
+                    _signatureService.Sign(cert.Item2, "test", "test", "test");
                     suitableCerts.Add(cert);
                 }
                 catch (Exception ex) {

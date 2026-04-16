@@ -30,36 +30,38 @@ namespace EcpSigner.Application.Jobs
             string docName = string.Format("'{0} - {1} ({2})'", doc.Name, doc.Num, doc.VersionNumber);
             (EcpCertificate ecpCert, ICertificate userCert) = SelectCertificate(certs, cancellationToken);
             await CheckBeforeSign(doc, ecpCert, docName, cancellationToken);
-            (string docBase64, string hashBase64) = await GetSignData(doc, ecpCert, docName, cancellationToken);
-            string signature = Sign(docBase64, userCert, docName, cancellationToken);
-            await SaveSignature(doc, ecpCert, signature, hashBase64, docName, cancellationToken);
+            List<ToSign> toSigns = await GetSignData(doc, ecpCert, docName, cancellationToken);
+            foreach (ToSign toSign in toSigns)
+            {
+                string signature = Sign(toSign.docBase64, userCert, docName, toSign.EMDVersion_id, cancellationToken);
+                await SaveSignature(doc, toSign.EMDVersion_id, ecpCert, signature, toSign.hashBase64, docName, cancellationToken);
+            }
         }
         /// <summary>
         /// Сохранение подписи документа
         /// </summary>
         /// <returns></returns>
-        private async Task SaveSignature(Document doc, EcpCertificate ecpCert, string signature, string hashBase64, string docName, CancellationToken cancellationToken)
+        private async Task SaveSignature(Document doc, string versionID, EcpCertificate ecpCert, string signature, string hashBase64, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            await _repository.SaveSignature(doc, hashBase64, signature, ecpCert, docName);
+            await _repository.SaveSignature(doc, versionID, hashBase64, signature, ecpCert, docName);
         }
         /// <summary>
         /// Вычисляем подпись
         /// </summary>
-        private string Sign(string docBase64, ICertificate userCert, string docName, CancellationToken cancellationToken)
+        private string Sign(string docBase64, ICertificate userCert, string docName, string versionID, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            string signature = _signatureService.Sign(userCert, docBase64, docName);
+            string signature = _signatureService.Sign(userCert, docBase64, docName, versionID);
             return signature;
         }
         /// <summary>
         /// Получаем документ и хеш для подписания
         /// </summary>
-        private async Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
+        private async Task<List<ToSign>> GetSignData(Document doc, EcpCertificate ecpCert, string docName, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) throw new StopWorkException();
-            (string docBase64, string hashBase64) = await _repository.GetSignData(doc, ecpCert, docName);
-            return (docBase64, hashBase64);
+            return await _repository.GetSignData(doc, ecpCert, docName);
         }
         /// <summary>
         /// Выбираем валидный сертификат

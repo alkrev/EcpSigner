@@ -14,7 +14,7 @@ namespace EcpSigner.Domain.Interfaces
         Task<List<Document>> SearchDocuments(string startDate, string endDate, CancellationToken token);
         Task<List<EcpCertificate>> LoadEcpCertificates();
         Task CheckBeforeSign(Document doc, EcpCertificate ecpCert, string docName);
-        Task<(string docBase64, string hashBase64)> GetSignData(Document doc, EcpCertificate ecpCert, string docName);
-        Task SaveSignature(Document doc, string hashBase64, string signature, EcpCertificate ecpCert, string docName);
+        Task<List<ToSign>> GetSignData(Document doc, EcpCertificate ecpCert, string docName);
+        Task SaveSignature(Document doc, string VersionID, string hashBase64, string signature, EcpCertificate ecpCert, string docName);
     }
 }

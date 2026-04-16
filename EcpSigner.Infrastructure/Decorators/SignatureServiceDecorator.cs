@@ -25,10 +25,10 @@ namespace EcpSigner.Infrastructure.Decorators
             _logger.Debug($"получено сертификатов пользователя {certs.Count} за {elapsedTime.TotalSeconds:f} секунд");
             return certs;
         }
-        public string Sign(ICertificate certificate, string docBase64, string document)
+        public string Sign(ICertificate certificate, string docBase64, string document, string versionID)
         {
-            string signature = _inner.Sign(certificate, docBase64, document);
-            _logger.Debug($"подпись {document} создана");
+            string signature = _inner.Sign(certificate, docBase64, document, versionID);
+            _logger.Debug($"подпись {document} ({versionID}) создана");
             return signature;
         }
     }
